@@ -20,15 +20,9 @@ LABELLED_IMAGES_PATH = "labelled_images"
 def get_unknown_images():
     """Fetch all unknown images for the specialist."""
     try:
-        current_user = get_jwt_identity()
-        print(f"Current JWT Identity: {current_user}")  # Log this to verify the identity
-
-        if not isinstance(current_user, str):
-            return jsonify({"error": "User identity is not a valid string"}), 422
-        
-        # images = os.listdir(UNKNOWN_IMAGES_PATH)
-        # image_urls = [f"/specialist/preview/{img}" for img in images]
-        return jsonify({"images": current_user}), 200
+        images = os.listdir(UNKNOWN_IMAGES_PATH)
+        image_urls = [f"/specialist/preview/{img}" for img in images]
+        return jsonify({"images": image_urls}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
