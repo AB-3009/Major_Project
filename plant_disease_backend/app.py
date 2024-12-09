@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
 from database.db import get_db
@@ -28,15 +28,30 @@ get_db()
 # Custom error handling for missing or expired tokens
 @jwt.unauthorized_loader
 def unauthorized_error(error):
-    return jsonify(message="Missing or invalid token"), 401
+    token = request.headers.get('Authorization', None)  # Extract token from header
+    return jsonify(
+        message="Missing or invalid token",
+        token=token,
+        msg="Unauthorized access - invalid or missing token"
+    ), 401
 
 @jwt.expired_token_loader
 def expired_token_error(error):
-    return jsonify(message="The token has expired"), 401
+    token = request.headers.get('Authorization', None)  # Extract token from header
+    return jsonify(
+        message="The token has expired",
+        token=token,
+        msg="Token has expired, please refresh"
+    ), 401
 
 @jwt.invalid_token_loader
 def invalid_token_error(error):
-    return jsonify(message="The token is invalid"), 422
+    token = request.headers.get('Authorization', None)  # Extract token from header
+    return jsonify(
+        message="The token is invalid",
+        token=token,
+        msg="Invalid token - please verify and try again"
+    ), 422
 
 # Register Blueprints (Routes)
 from routes.auth_routes import auth_bp
