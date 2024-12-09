@@ -26,9 +26,9 @@ def get_unknown_images():
         if not isinstance(current_user, str):
             return jsonify({"error": "User identity is not a valid string"}), 422
         
-        images = os.listdir(UNKNOWN_IMAGES_PATH)
-        image_urls = [f"/specialist/preview/{img}" for img in images]
-        return jsonify({"images": image_urls}), 200
+        # images = os.listdir(UNKNOWN_IMAGES_PATH)
+        # image_urls = [f"/specialist/preview/{img}" for img in images]
+        return jsonify({"images": current_user}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
