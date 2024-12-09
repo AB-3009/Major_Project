@@ -1,0 +1,10 @@
+Flask
+Flask-Cors
+Flask-JWT-Extended
+pymongo
+tensorflow
+werkzeug
+bson
+requests
+numpy
+pillow
