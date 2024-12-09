@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, jsonify
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
 from database.db import get_db
@@ -10,8 +10,11 @@ from services.pipeline import start_retraining_pipeline
 # Initialize Flask App
 app = Flask(__name__)
 
+# Secret key for encoding JWTs
+app.config['SECRET_KEY'] = 'ayush'
+
 # App Configurations
-app.config['JWT_SECRET_KEY'] = 'your_jwt_secret_key'
+app.config['JWT_SECRET_KEY'] = 'ayush'
 app.config['CORS_HEADERS'] = 'Content-Type'
 
 # Middleware
@@ -20,6 +23,20 @@ jwt = JWTManager(app)
 
 # MongoDB Connection
 get_db()
+
+
+# Custom error handling for missing or expired tokens
+@jwt.unauthorized_loader
+def unauthorized_error(error):
+    return jsonify(message="Missing or invalid token"), 401
+
+@jwt.expired_token_loader
+def expired_token_error(error):
+    return jsonify(message="The token has expired"), 401
+
+@jwt.invalid_token_loader
+def invalid_token_error(error):
+    return jsonify(message="The token is invalid"), 422
 
 # Register Blueprints (Routes)
 from routes.auth_routes import auth_bp

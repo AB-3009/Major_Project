@@ -55,9 +55,10 @@ def register():
     message = "Registration successful. Awaiting admin approval." if status == "Pending" else "Registration successful."
     return jsonify({"message": message}), 201
 
-# @jwt_required()
-# @role_required('admin')
+
 @auth_bp.route('/pending-users', methods=['GET'])
+@jwt_required()
+@role_required('admin')
 def get_pending_users():
     # Find pending users and exclude the "password" field
     pending_users = list(users_collection.find({"status": "Pending"}, {"password": 0}))
