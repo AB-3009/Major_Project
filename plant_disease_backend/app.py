@@ -1,6 +1,6 @@
 from flask import Flask, jsonify, request
 from flask_cors import CORS
-from flask_jwt_extended import JWTManager, get_jwt_identity
+from flask_jwt_extended import JWTManager
 from database.db import get_db
 from threading import Thread
 
@@ -15,10 +15,11 @@ app.config['SECRET_KEY'] = 'ayush'
 
 # App Configurations
 app.config['JWT_SECRET_KEY'] = 'ayush'
+app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(hours=12)
 app.config['CORS_HEADERS'] = 'Content-Type'
 
 # Middleware
-CORS(app)
+CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True)
 jwt = JWTManager(app)
 
 # MongoDB Connection
@@ -46,14 +47,11 @@ def expired_token_error(error):
 
 @jwt.invalid_token_loader
 def invalid_token_error(error):
-    current_user = get_jwt_identity()
-    request.user = current_user 
     token = request.headers.get('Authorization', None)  # Extract token from header
     return jsonify(
         message="The token is invalid",
         token=token,
-        msg="Invalid token - please verify and try again",
-        current_user=current_user
+        msg="Invalid token - please verify and try again"
     ), 422
 
 # Register Blueprints (Routes)
