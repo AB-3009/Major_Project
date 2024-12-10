@@ -14,9 +14,10 @@ users_collection = db['users']
 UNKNOWN_IMAGES_PATH = "unknown_images"
 LABELLED_IMAGES_PATH = "labelled_images"
 
+
+# @jwt_required()
+# @role_required('specialist')
 @specialist_bp.route('/unknown_images', methods=['GET'])
-@jwt_required()
-@role_required('specialist')
 def get_unknown_images():
     """Fetch all unknown images for the specialist."""
     try:

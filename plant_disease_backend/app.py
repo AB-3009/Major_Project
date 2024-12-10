@@ -1,6 +1,6 @@
 from flask import Flask, jsonify, request
 from flask_cors import CORS
-from flask_jwt_extended import JWTManager
+from flask_jwt_extended import JWTManager, get_jwt_identity
 from database.db import get_db
 from threading import Thread
 
@@ -46,11 +46,14 @@ def expired_token_error(error):
 
 @jwt.invalid_token_loader
 def invalid_token_error(error):
+    current_user = get_jwt_identity()
+    request.user = current_user 
     token = request.headers.get('Authorization', None)  # Extract token from header
     return jsonify(
         message="The token is invalid",
         token=token,
         msg="Invalid token - please verify and try again"
+        current_user=current_user
     ), 422
 
 # Register Blueprints (Routes)
