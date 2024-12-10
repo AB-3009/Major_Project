@@ -52,7 +52,7 @@ def invalid_token_error(error):
     return jsonify(
         message="The token is invalid",
         token=token,
-        msg="Invalid token - please verify and try again"
+        msg="Invalid token - please verify and try again",
         current_user=current_user
     ), 422
 
