@@ -3,6 +3,7 @@ from flask_cors import CORS
 from flask_jwt_extended import JWTManager
 from database.db import get_db
 from threading import Thread
+from datetime import timedelta
 
 # Import the retraining pipeline function
 from services.pipeline import start_retraining_pipeline
@@ -15,6 +16,8 @@ app.config['SECRET_KEY'] = 'ayush'
 
 # App Configurations
 app.config['JWT_SECRET_KEY'] = 'ayush'
+app.config['JWT_ALGORITHM'] = 'HS256'
+
 app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(hours=12)
 app.config['CORS_HEADERS'] = 'Content-Type'
 
