@@ -1,7 +1,7 @@
 from flask import Blueprint, jsonify, request
 from flask_jwt_extended import jwt_required
 from database.db import get_db
-from services.rbac import role_required
+from services.rbac import role_required, basic_auth_required
 
 history_bp = Blueprint('history', __name__)
 
@@ -11,7 +11,7 @@ predictions_collection = db['predictions']  # Ensure you have a collection for p
 
 # Get Prediction History
 @history_bp.route('/history', methods=['GET'])
-@jwt_required()
+@basic_auth_required
 @role_required('customer')
 def get_history():
     customer_email = request.user['email']  # Get the email from JWT identity

@@ -9,7 +9,7 @@ from datetime import datetime
 from tensorflow.keras.models import load_model
 import tensorflow as tf
 import re
-from services.rbac import role_required
+from services.rbac import role_required, basic_auth_required
 import requests
 from database.db import get_db
 
@@ -31,7 +31,7 @@ predictions_collection = db['predictions']
 
 
 # Load the trained CNN model
-model_path = "../models/plant_disease_model.h5"
+model_path = "models/plant_disease_model.h5"
 model = load_model(model_path)
 
 print("Model loaded successfully.")
@@ -112,7 +112,7 @@ def parse_generated_text(text):
     }
     
 @predict_bp.route('/predict', methods=['POST'])
-@jwt_required()
+@basic_auth_required
 @role_required('customer')
 def predict():
     if 'image' not in request.files:

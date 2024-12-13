@@ -3,7 +3,7 @@ from bson import ObjectId
 from flask import Blueprint, request, jsonify
 from werkzeug.utils import secure_filename
 from flask_jwt_extended import jwt_required
-from services.rbac import role_required
+from services.rbac import role_required, basic_auth_required
 from database.db import get_db
 from services.email_service import send_email
 
@@ -19,7 +19,7 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 # Add Product (Seller)
 @marketplace_bp.route('/add', methods=['POST'])
-@jwt_required()
+@basic_auth_required
 @role_required('seller')
 def add_product():
     data = request.form.to_dict()
@@ -59,7 +59,7 @@ def add_product():
 
 # Update Product (Seller)
 @marketplace_bp.route('/update/<product_id>', methods=['PUT'])
-@jwt_required()
+@basic_auth_required
 @role_required('seller')
 def update_product(product_id):
     data = request.form.to_dict()
@@ -95,7 +95,7 @@ def update_product(product_id):
 
 # Delete Product (Seller)
 @marketplace_bp.route('/delete/<product_id>', methods=['DELETE'])
-@jwt_required()
+@basic_auth_required
 @role_required('seller')
 def delete_product(product_id):
     result = products_collection.delete_one(
@@ -109,7 +109,7 @@ def delete_product(product_id):
 
 # Get Seller's Products
 @marketplace_bp.route('/my-products', methods=['GET'])
-@jwt_required()
+@basic_auth_required
 @role_required('seller')
 def get_seller_products():
     seller_email = request.user['email']
@@ -123,7 +123,7 @@ def get_seller_products():
 
 # Get All Products (Customer)
 @marketplace_bp.route('/all', methods=['GET'])
-@jwt_required()
+@basic_auth_required
 @role_required('customer')
 def get_all_products():
     products = list(products_collection.find())
@@ -136,7 +136,7 @@ def get_all_products():
 
 # Get Product Details (Customer)
 @marketplace_bp.route('/product/<product_id>', methods=['GET'])
-@jwt_required()
+@basic_auth_required
 @role_required('customer')
 def get_product_details(product_id):
     product = products_collection.find_one({"_id": ObjectId(product_id)})
@@ -151,7 +151,7 @@ def get_product_details(product_id):
 
 # Place Order (Customer)
 @marketplace_bp.route('/purchase/<product_id>', methods=['POST'])
-@jwt_required()
+@basic_auth_required
 @role_required('customer')
 def purchase_product(product_id):
     # Get the product details

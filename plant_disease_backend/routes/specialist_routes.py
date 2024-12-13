@@ -2,7 +2,7 @@ from flask import Blueprint, jsonify, request, send_from_directory
 import os
 from flask_jwt_extended import get_jwt_identity, jwt_required
 from database.db import get_db
-from services.rbac import role_required
+from services.rbac import role_required, basic_auth_required
 
 specialist_bp = Blueprint('specialist', __name__)
 
@@ -17,7 +17,7 @@ LABELLED_IMAGES_PATH = "labelled_images"
 
 
 @specialist_bp.route('/unknown_images', methods=['GET'])
-@jwt_required()
+@basic_auth_required
 @role_required('specialist')
 def get_unknown_images():
     """Fetch all unknown images for the specialist."""
@@ -31,7 +31,7 @@ def get_unknown_images():
 
 
 @specialist_bp.route('/preview/<image_name>', methods=['GET'])
-@jwt_required()
+@basic_auth_required
 @role_required('specialist')
 def preview_image(image_name):
     """Preview a specific unknown image."""
@@ -43,7 +43,7 @@ def preview_image(image_name):
 
 
 @specialist_bp.route('/label_images', methods=['POST'])
-@jwt_required()
+@basic_auth_required
 @role_required('specialist')
 def label_images():
     """Label images with the selected disease."""
@@ -69,7 +69,7 @@ def label_images():
         # print(f"{len(images)} images labeled as '{disease}'.")
 
         # Update specialist's labeled count
-        current_user = get_jwt_identity()
+        current_user = request.user
         # print("Current user email: ", current_user['email'])
         users_collection.update_one(
             {"email": current_user['email']},

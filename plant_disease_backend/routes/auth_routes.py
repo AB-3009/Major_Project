@@ -1,16 +1,21 @@
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import create_access_token, jwt_required
 from werkzeug.security import generate_password_hash, check_password_hash
-from services.rbac import role_required
+from services.rbac import role_required, basic_auth_required
 from datetime import datetime
 from database.db import get_db
 from bson import ObjectId
+import uuid
 
 auth_bp = Blueprint('auth', __name__)
 
 # MongoDB Connection
 db = get_db()
 users_collection = db['users']
+
+# Helper Function to Generate Session Token
+def generate_token():
+    return str(uuid.uuid4())
 
 # Registration Endpoint
 @auth_bp.route('/register', methods=['POST'])
@@ -41,7 +46,8 @@ def register():
         "password": hashed_password,
         "role": role,
         "status": status,
-        "createdAt": datetime.utcnow()
+        "createdAt": datetime.utcnow(),
+        "session_token": None  # Initially, no session token
     }
 
     # Add labelled_count for specialists
@@ -57,7 +63,7 @@ def register():
 
 
 @auth_bp.route('/pending-users', methods=['GET'])
-@jwt_required()
+@basic_auth_required
 @role_required('admin')
 def get_pending_users():
     # Find pending users and exclude the "password" field
@@ -74,7 +80,7 @@ def get_pending_users():
 # from bson import ObjectId  # Ensure ObjectId is imported
 
 @auth_bp.route('/approve-user', methods=['POST'])
-@jwt_required()
+@basic_auth_required
 @role_required('admin')
 def approve_user():
     data = request.json
@@ -131,12 +137,28 @@ def login():
     if user['status'] != "Approved":
         return jsonify({"error": "Account pending admin approval."}), 403
 
-    # Generate JWT token
-    access_token = create_access_token(identity={
-        "username": user['username'],
-        "email": user['email'],
-        "role": user['role']
-    })
+    # Generate a session token
+    session_token = generate_token()
 
-    return jsonify({"access_token": access_token, "role": user['role']}), 200
+    # Update user in DB with session token
+    users_collection.update_one({"_id": user["_id"]}, {"$set": {"session_token": session_token}})
+
+    return jsonify({"session_token": session_token, "role": user['role']}), 200
+
+
+# Logout Endpoint
+@auth_bp.route('/logout', methods=['POST'])
+def logout():
+    token = request.headers.get('Authorization')
+    if not token:
+        return jsonify({"error": "Authorization token is required"}), 400
+
+    # Find user by token
+    user = users_collection.find_one({"session_token": token})
+    if not user:
+        return jsonify({"error": "Invalid session token"}), 401
+
+    # Clear the session token
+    users_collection.update_one({"_id": user["_id"]}, {"$set": {"session_token": None}})
+    return jsonify({"message": "Logged out successfully."}), 200
 

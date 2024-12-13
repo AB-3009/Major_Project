@@ -3,7 +3,7 @@ from flask_jwt_extended import jwt_required
 from database.db import get_db
 from services.email_service import send_email  # Import the send_email function
 from datetime import datetime
-from services.rbac import role_required
+from services.rbac import role_required, basic_auth_required
 
 feedback_bp = Blueprint('feedback', __name__)
 
@@ -14,7 +14,7 @@ users_collection = db['users']  # Access users collection to get admin emails
 
 # Submit Feedback
 @feedback_bp.route('/submit_feedback', methods=['POST'])
-@jwt_required()
+@basic_auth_required
 @role_required('customer')
 def submit_feedback():
     data = request.json

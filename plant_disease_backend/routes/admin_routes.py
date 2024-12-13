@@ -2,7 +2,7 @@ from datetime import datetime
 from flask import Blueprint, jsonify
 from flask_jwt_extended import jwt_required
 from services.email_service import send_email
-from services.rbac import role_required
+from services.rbac import role_required, basic_auth_required
 from database.db import get_db
 from bson import ObjectId
 
@@ -17,7 +17,7 @@ feedback_collection = db['feedback']
 
 # Admin view of all sellers and their products
 @admin_bp.route('/sellers', methods=['GET'])
-@jwt_required()
+@basic_auth_required
 @role_required('admin')
 def list_sellers():
     sellers = users_collection.find({"role": "seller"})
@@ -47,7 +47,7 @@ def list_sellers():
 
 # Admin deletes a product
 @admin_bp.route('/delete_product/<product_id>', methods=['DELETE'])
-@jwt_required()
+@basic_auth_required
 @role_required('admin')
 def delete_product(product_id):
     # Find product
@@ -75,7 +75,7 @@ def delete_product(product_id):
 
 # Admin deletes a seller and all their products
 @admin_bp.route('/delete_seller/<seller_email>', methods=['DELETE'])
-@jwt_required()
+@basic_auth_required
 @role_required('admin')
 def delete_seller(seller_email):
     # Find seller by email
@@ -101,7 +101,7 @@ def delete_seller(seller_email):
 
 # Admin views the list of specialists
 @admin_bp.route('/specialists', methods=['GET'])
-@jwt_required()
+@basic_auth_required
 @role_required('admin')
 def get_specialists():
     # Get all specialists from the users collection
@@ -122,7 +122,7 @@ def get_specialists():
 
 # Admin assigns a specialist to the task of labeling unknown images
 @admin_bp.route('/assign_labeling_task/<specialist_email>', methods=['POST'])
-@jwt_required()
+@basic_auth_required
 @role_required('admin')
 def assign_labeling_task(specialist_email):
     # Find the specialist by email
@@ -157,7 +157,7 @@ def assign_labeling_task(specialist_email):
 
 # Admin view of all feedback
 @admin_bp.route('/feedback', methods=['GET'])
-@jwt_required()
+@basic_auth_required
 @role_required('admin')
 def view_feedback():
     feedback_list = feedback_collection.find()
