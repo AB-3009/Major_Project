@@ -58,7 +58,7 @@ def invalid_token_error(error):
 
 # Register Blueprints (Routes)
 from routes.auth_routes import auth_bp
-from routes.predict_routes import predict_bp
+# from routes.predict_routes import predict_bp
 from routes.marketplace_routes import marketplace_bp
 from routes.admin_routes import admin_bp
 from routes.specialist_routes import specialist_bp
@@ -67,7 +67,7 @@ from routes.history_routes import history_bp
 # from routes.notification_routes import notification_bp
 
 app.register_blueprint(auth_bp, url_prefix='/auth')
-app.register_blueprint(predict_bp, url_prefix='/predict')
+# app.register_blueprint(predict_bp, url_prefix='/predict')
 app.register_blueprint(marketplace_bp, url_prefix='/marketplace')
 app.register_blueprint(admin_bp, url_prefix='/admin')
 app.register_blueprint(specialist_bp, url_prefix='/specialist')
