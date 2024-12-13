@@ -15,9 +15,10 @@ UNKNOWN_IMAGES_PATH = "unknown_images"
 LABELLED_IMAGES_PATH = "labelled_images"
 
 
-# @jwt_required()
-# @role_required('specialist')
+
 @specialist_bp.route('/unknown_images', methods=['GET'])
+@jwt_required()
+@role_required('specialist')
 def get_unknown_images():
     """Fetch all unknown images for the specialist."""
     try:
@@ -28,9 +29,10 @@ def get_unknown_images():
         return jsonify({"error": str(e)}), 500
 
 
-# @jwt_required()
-# @role_required('specialist')
+
 @specialist_bp.route('/preview/<image_name>', methods=['GET'])
+@jwt_required()
+@role_required('specialist')
 def preview_image(image_name):
     """Preview a specific unknown image."""
     try:
@@ -39,9 +41,10 @@ def preview_image(image_name):
         return jsonify({"error": "Image not found"}), 404
 
 
-# @jwt_required()
-# @role_required('specialist')
+
 @specialist_bp.route('/label_images', methods=['POST'])
+@jwt_required()
+@role_required('specialist')
 def label_images():
     """Label images with the selected disease."""
     data = request.json
