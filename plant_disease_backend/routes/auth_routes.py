@@ -108,39 +108,6 @@ def approve_user():
 
 
 # Login Endpoint
-# @auth_bp.route('/login', methods=['POST'])
-# def login():
-#     data = request.json
-#     email = data.get('email')
-#     password = data.get('password')
-
-#     if not all([email, password]):
-#         return jsonify({"error": "Email and password are required"}), 400
-    
-#     print("before accessing mongo: ", email, password)
-
-#     # Find user by email
-#     user = users_collection.find_one({"email": email})
-    
-#     print("user: ", user)
-    
-#     if not user or not check_password_hash(user['password'], password):
-#         return jsonify({"error": "Invalid email or password"}), 401
-
-#     # Check if user is approved
-#     if user['status'] != "Approved":
-#         return jsonify({"error": "Account pending admin approval."}), 403
-
-#     # Generate JWT token
-#     access_token = create_access_token(identity={
-#         "username": user['username'],
-#         "email": user['email'],
-#         "role": user['role']
-#     })
-
-#     return jsonify({"access_token": access_token, "role": user['role']}), 200
-
-
 @auth_bp.route('/login', methods=['POST'])
 def login():
     data = request.json
@@ -153,13 +120,23 @@ def login():
     print("before accessing mongo: ", email, password)
 
     # Find user by email
+    user = users_collection.find_one({"email": email})
     
+    print("user: ", user)
+    
+    if not user or not check_password_hash(user['password'], password):
+        return jsonify({"error": "Invalid email or password"}), 401
+
+    # Check if user is approved
+    if user['status'] != "Approved":
+        return jsonify({"error": "Account pending admin approval."}), 403
+
     # Generate JWT token
     access_token = create_access_token(identity={
-        "username": "specialist3",
-        "email": email,
-        "role": "specialist"
+        "username": user['username'],
+        "email": user['email'],
+        "role": user['role']
     })
 
-    return jsonify({"access_token": access_token, "role": "admin"}), 200
+    return jsonify({"access_token": access_token, "role": user['role']}), 200
 
