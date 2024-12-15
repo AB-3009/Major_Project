@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, request, send_from_directory
+from flask import Blueprint, jsonify, request, send_from_directory, send_file
 import os
 from flask_jwt_extended import get_jwt_identity, jwt_required
 from database.db import get_db
@@ -31,12 +31,15 @@ def get_unknown_images():
 
 
 @specialist_bp.route('/preview/<image_name>', methods=['GET'])
-@basic_auth_required
-@role_required('specialist')
 def preview_image(image_name):
     """Preview a specific unknown image."""
     try:
-        return send_from_directory(UNKNOWN_IMAGES_PATH, image_name)
+        # return send_from_directory(UNKNOWN_IMAGES_PATH, image_name)
+        file_path = os.path.join(UNKNOWN_IMAGES_PATH, image_name)
+        # improved_path = os.path.abspath(file_path)
+        # print("File path: ", file_path)
+        # print("Improved path: ", improved_path)
+        return send_file("../"+file_path)
     except FileNotFoundError:
         return jsonify({"error": "Image not found"}), 404
 

@@ -1,10 +1,11 @@
 from datetime import datetime
-from flask import Blueprint, jsonify, send_from_directory
+from flask import Blueprint, jsonify, send_from_directory, send_file
 from flask_jwt_extended import jwt_required
 from services.email_service import send_email
 from services.rbac import role_required, basic_auth_required
 from database.db import get_db
 from bson import ObjectId
+import os
 
 admin_bp = Blueprint('admin', __name__)
 
@@ -48,12 +49,13 @@ def list_sellers():
 
 
 @admin_bp.route('/preview/<image_name>', methods=['GET'])
-@basic_auth_required
-@role_required('admin')
 def preview_image(image_name):
     """Preview a specific unknown image."""
     try:
-        return send_from_directory(PRODUCT_IMAGES_PATH, image_name)
+        # return send_from_directory(PRODUCT_IMAGES_PATH, image_name)
+        file_path = os.path.join(PRODUCT_IMAGES_PATH, image_name)
+        
+        return send_file("../"+file_path)
     except FileNotFoundError:
         return jsonify({"error": "Image not found"}), 404
 
