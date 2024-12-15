@@ -1,5 +1,5 @@
 from datetime import datetime
-from flask import Blueprint, jsonify
+from flask import Blueprint, jsonify, send_from_directory
 from flask_jwt_extended import jwt_required
 from services.email_service import send_email
 from services.rbac import role_required, basic_auth_required
@@ -14,6 +14,8 @@ users_collection = db['users']
 products_collection = db['products']
 tasks_collection = db['tasks']
 feedback_collection = db['feedback']
+
+PRODUCT_IMAGES_PATH = "product_images"
 
 # Admin view of all sellers and their products
 @admin_bp.route('/sellers', methods=['GET'])
@@ -44,6 +46,16 @@ def list_sellers():
     
     return jsonify(seller_list), 200
 
+
+@admin_bp.route('/preview/<image_name>', methods=['GET'])
+@basic_auth_required
+@role_required('admin')
+def preview_image(image_name):
+    """Preview a specific unknown image."""
+    try:
+        return send_from_directory(PRODUCT_IMAGES_PATH, image_name)
+    except FileNotFoundError:
+        return jsonify({"error": "Image not found"}), 404
 
 # Admin deletes a product
 @admin_bp.route('/delete_product/<product_id>', methods=['DELETE'])
