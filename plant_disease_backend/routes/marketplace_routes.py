@@ -27,6 +27,7 @@ def add_product():
     description = data.get('description')
     price = data.get('price')
     quantity = data.get('quantity')
+   
     
     if not all([name, description, price, quantity]):
         return jsonify({"error": "All fields are required"}), 400
@@ -36,6 +37,7 @@ def add_product():
         return jsonify({"error": "No image file provided"}), 400
 
     file = request.files['image']
+   
     if file.filename == '':
         return jsonify({"error": "No selected file"}), 400
 
@@ -64,6 +66,8 @@ def add_product():
 def update_product(product_id):
     data = request.form.to_dict()
     updated_data = {}
+    
+
 
     if 'name' in data:
         updated_data['name'] = data['name']

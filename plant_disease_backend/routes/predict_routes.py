@@ -2,7 +2,7 @@ import os
 import shutil
 from flask_jwt_extended import jwt_required
 import numpy as np
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, send_file
 from werkzeug.utils import secure_filename
 from tensorflow.keras.preprocessing.image import load_img, img_to_array
 from datetime import datetime
@@ -188,7 +188,18 @@ def predict():
         # Clean up the uploaded file
         # os.remove(filepath)
 
-
+@predict_bp.route('/preview/<image_name>', methods=['GET'])
+def preview_image(image_name):
+    """Preview a specific unknown image."""
+    try:
+        # return send_from_directory(UNKNOWN_IMAGES_PATH, image_name)
+        file_path = os.path.join(UPLOAD_FOLDER, image_name)
+        # improved_path = os.path.abspath(file_path)
+        # print("File path: ", file_path)
+        # print("Improved path: ", improved_path)
+        return send_file("../"+file_path)
+    except FileNotFoundError:
+        return jsonify({"error": "Image not found"}), 404
 
 
 '''
