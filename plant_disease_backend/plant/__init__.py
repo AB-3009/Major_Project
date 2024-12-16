@@ -35,7 +35,7 @@ def unauthorized_error(error):
     return jsonify(
         message="Missing or invalid token",
         token=token,
-        msg="Unauthorized access - invalid or missing token"
+        msg="Unauthorized access-invalid or missing token"
     ), 401
 
 @jwt.expired_token_loader
