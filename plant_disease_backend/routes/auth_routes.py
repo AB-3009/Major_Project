@@ -143,7 +143,7 @@ def login():
     # Update user in DB with session token
     users_collection.update_one({"_id": user["_id"]}, {"$set": {"session_token": session_token}})
 
-    return jsonify({"session_token": session_token, "role": user['role']}), 200
+    return jsonify({"session_token": session_token, "role": user['role'], "username": user['username']}), 200
 
 
 # Logout Endpoint
