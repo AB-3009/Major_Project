@@ -12,9 +12,14 @@ import re
 from services.rbac import role_required, basic_auth_required
 import requests
 from database.db import get_db
-import subprocess
-import cv2
 import base64
+import subprocess
+import sys
+subprocess.check_call([sys.executable, "-m", "pip", "install", "opencv-python"])
+print("OpenCV installed successfully!")
+
+import cv2
+
 
 
 
