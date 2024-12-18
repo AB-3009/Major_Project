@@ -8,6 +8,6 @@ requests
 numpy
 pillow
 gunicorn
-libgl1
+# libgl1
 opencv-python-headless
 opencv-python
