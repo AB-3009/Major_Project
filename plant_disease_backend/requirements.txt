@@ -8,4 +8,4 @@ requests
 numpy
 pillow
 gunicorn
-cv2
+opencv-python
