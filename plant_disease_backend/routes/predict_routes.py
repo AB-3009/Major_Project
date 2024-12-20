@@ -234,6 +234,8 @@ class_labels = ["Apple___Apple_scab","Apple___Black_rot","Apple___Cedar_apple_ru
 
 def preprocess_image(img):
     # Resize and normalize image to match training preprocessing
+    if img is None or img.size == 0:
+        raise ValueError("Empty or invalid image passed to preprocess_image.")
     img = cv2.resize(img, (128, 128))
     img = img / 255.0
     img = img_to_array(img)
@@ -279,7 +281,7 @@ def process_frame_endpoint():
 
         # Extract and decode base64 data
         print("Decoding frame...")
-        base64_data = data['frame']
+        base64_data = data['frame'].split(',')[2]
         print("Base64 data:", base64_data)
         frame = np.frombuffer(base64.b64decode(base64_data), np.uint8)
         print("Frame decoded successfully.")
