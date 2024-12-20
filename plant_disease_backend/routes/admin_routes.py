@@ -25,25 +25,29 @@ PRODUCT_IMAGES_PATH = "product_images"
 def list_sellers():
     sellers = users_collection.find({"role": "seller"})
     seller_list = []
-    
-    for seller in sellers:
-        products = products_collection.find({"seller_id": seller['email']})
-        product_list = []
-        for product in products:
-            product_list.append({
-                "product_id": str(product['_id']),
-                "name": product['name'],
-                "description": product['description'],
-                "price": product['price'],
-                "quantity": product['quantity'],
-                "image": product['image']
-            })
         
-        seller_list.append({
-            "username": seller['username'],
-            "email": seller['email'],
-            "products": product_list
-        })
+    for seller in sellers:   
+        if seller['status'] == 'Approved':          
+            products = products_collection.find({"seller_id": seller['email']})
+            product_list = []
+            for product in products:
+                product_list.append({
+                    "product_id": str(product['_id']),
+                    "name": product['name'],
+                    "description": product['description'],
+                    "price": product['price'],
+                    "quantity": product['quantity'],
+                    "image": product['image']
+                })
+            
+            seller_list.append({
+                "username": seller['username'],
+                "email": seller['email'],
+                "products": product_list
+            })
+    
+    if not seller_list:
+        return jsonify({"message": "No Approved sellers found."}), 404
     
     return jsonify(seller_list), 200
 
