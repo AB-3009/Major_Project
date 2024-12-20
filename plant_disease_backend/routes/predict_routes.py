@@ -284,7 +284,7 @@ def process_frame_endpoint():
         frame = np.frombuffer(base64.b64decode(base64_data), np.uint8)
         print("Frame decoded successfully.")
         frame = cv2.imdecode(frame, cv2.IMREAD_COLOR)
-        print("Frame shape:", frame.shape)
+        print("Frame:", frame)
         predicted_class, confidence = process_frame(frame)
         print("Predicted class:", predicted_class)
         print("Confidence:", confidence)
