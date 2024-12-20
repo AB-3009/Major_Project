@@ -123,12 +123,12 @@ def login():
     if not all([email, password]):
         return jsonify({"error": "Email and password are required"}), 400
     
-    print("before accessing mongo: ", email, password)
+    # print("before accessing mongo: ", email, password)
 
     # Find user by email
     user = users_collection.find_one({"email": email})
     
-    print("user: ", user)
+    # print("user: ", user)
     
     if not user or not check_password_hash(user['password'], password):
         return jsonify({"error": "Invalid email or password"}), 401
