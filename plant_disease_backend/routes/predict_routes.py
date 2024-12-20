@@ -279,7 +279,7 @@ def process_frame_endpoint():
 
         # Extract and decode base64 data
         print("Decoding frame...")
-        base64_data = data['frame'].split(',')[2]
+        base64_data = data['frame']
         print("Base64 data:", base64_data)
         frame = np.frombuffer(base64.b64decode(base64_data), np.uint8)
         print("Frame decoded successfully.")
