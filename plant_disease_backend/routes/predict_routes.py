@@ -18,7 +18,7 @@ import sys
 # subprocess.check_call([sys.executable, "-m", "pip", "install", "opencv-python"])
 # print("OpenCV installed successfully!")
 
-# import cv2
+import cv2
 import json
 from groq import Groq
 from dotenv import load_dotenv
@@ -242,87 +242,87 @@ def preview_image(image_name):
 
 
 
-# # Load the TensorFlow Lite model
-# tflite_model_path = 'models/plant_disease_model_final.tflite'
-# interpreter = tf.lite.Interpreter(model_path=tflite_model_path)
-# interpreter.allocate_tensors()
+# Load the TensorFlow Lite model
+tflite_model_path = 'models/plant_disease_model_final.tflite'
+interpreter = tf.lite.Interpreter(model_path=tflite_model_path)
+interpreter.allocate_tensors()
 
-# # Get model input and output details
-# input_details = interpreter.get_input_details()
-# output_details = interpreter.get_output_details()
+# Get model input and output details
+input_details = interpreter.get_input_details()
+output_details = interpreter.get_output_details()
 
-# # Threshold for confidence level
-# CONFIDENCE_THRESHOLD = 0.8
+# Threshold for confidence level
+CONFIDENCE_THRESHOLD = 0.8
 
-# # Dynamically load class labels from the subdirectories in the data folder
-# # data_dir = 'C:/files/plant-disease-detection/data'
-# # class_labels = {i: folder_name for i, folder_name in enumerate(sorted(os.listdir(data_dir))) if os.path.isdir(os.path.join(data_dir, folder_name))}
+# Dynamically load class labels from the subdirectories in the data folder
+# data_dir = 'C:/files/plant-disease-detection/data'
+# class_labels = {i: folder_name for i, folder_name in enumerate(sorted(os.listdir(data_dir))) if os.path.isdir(os.path.join(data_dir, folder_name))}
 
-# class_labels = ["Apple___Apple_scab","Apple___Black_rot","Apple___Cedar_apple_rust","Apple___healthy","Blueberry___healthy","Cherry_(including_sour)___healthy","Cherry_(including_sour)___Powdery_mildew","Corn_(maize)___Cercospora_leaf_spot Gray_leaf_spot","Corn_(maize)___Common_rust","Corn_(maize)___healthy","Corn_(maize)___Northern_Leaf_Blight","Grape___Black_rot","Grape___Esca_(Black_Measles)","Grape___healthy","Grape___Leaf_blight_(Isariopsis_Leaf_Spot)","Orange___Haunglongbing_(Citrus_greening)","Peach___Bacterial_spot","Peach___healthy","Pepper_bell___Bacterial_spot","Pepper_bell___healthy","Potato___Early_blight","Potato___healthy","Potato___Late_blight","Raspberry___healthy","Soybean___healthy","Squash___Powdery_mildew","Strawberry___healthy","Strawberry___Leaf_scorch","Tomato___Bacterial_spot","Tomato___Early_blight","Tomato___healthy","Tomato___Late_blight","Tomato___Leaf_Mold","Tomato___Septoria_leaf_spot","Tomato___Spider_mites Two-spotted_spider_mite","Tomato___Target_Spot","Tomato___Tomato_mosaic_virus","Tomato___Tomato_Yellow_Leaf_Curl_Virus"]
+class_labels = ["Apple___Apple_scab","Apple___Black_rot","Apple___Cedar_apple_rust","Apple___healthy","Blueberry___healthy","Cherry_(including_sour)___healthy","Cherry_(including_sour)___Powdery_mildew","Corn_(maize)___Cercospora_leaf_spot Gray_leaf_spot","Corn_(maize)___Common_rust","Corn_(maize)___healthy","Corn_(maize)___Northern_Leaf_Blight","Grape___Black_rot","Grape___Esca_(Black_Measles)","Grape___healthy","Grape___Leaf_blight_(Isariopsis_Leaf_Spot)","Orange___Haunglongbing_(Citrus_greening)","Peach___Bacterial_spot","Peach___healthy","Pepper_bell___Bacterial_spot","Pepper_bell___healthy","Potato___Early_blight","Potato___healthy","Potato___Late_blight","Raspberry___healthy","Soybean___healthy","Squash___Powdery_mildew","Strawberry___healthy","Strawberry___Leaf_scorch","Tomato___Bacterial_spot","Tomato___Early_blight","Tomato___healthy","Tomato___Late_blight","Tomato___Leaf_Mold","Tomato___Septoria_leaf_spot","Tomato___Spider_mites Two-spotted_spider_mite","Tomato___Target_Spot","Tomato___Tomato_mosaic_virus","Tomato___Tomato_Yellow_Leaf_Curl_Virus"]
 
-# def preprocess_image(img):
-#     # Resize and normalize image to match training preprocessing
-#     if img is None or img.size == 0:
-#         raise ValueError("Empty or invalid image passed to preprocess_image.")
-#     img = cv2.resize(img, (128, 128))
-#     img = img / 255.0
-#     img = img_to_array(img)
-#     img = np.expand_dims(img, axis=0)
-#     return img
+def preprocess_image(img):
+    # Resize and normalize image to match training preprocessing
+    if img is None or img.size == 0:
+        raise ValueError("Empty or invalid image passed to preprocess_image.")
+    img = cv2.resize(img, (128, 128))
+    img = img / 255.0
+    img = img_to_array(img)
+    img = np.expand_dims(img, axis=0)
+    return img
 
-# def process_frame(frame):
-#     try:
-#         # Preprocess the image
-#         image = preprocess_image(frame)
+def process_frame(frame):
+    try:
+        # Preprocess the image
+        image = preprocess_image(frame)
 
-#         # Set input tensor
-#         interpreter.set_tensor(input_details[0]['index'], image)
+        # Set input tensor
+        interpreter.set_tensor(input_details[0]['index'], image)
 
-#         # Run inference
-#         interpreter.invoke()
+        # Run inference
+        interpreter.invoke()
 
-#         # Get output tensor
-#         prediction = interpreter.get_tensor(output_details[0]['index'])
-#         predicted_class_index = np.argmax(prediction, axis=-1)[0]
-#         confidence = np.max(prediction, axis=-1)[0]
+        # Get output tensor
+        prediction = interpreter.get_tensor(output_details[0]['index'])
+        predicted_class_index = np.argmax(prediction, axis=-1)[0]
+        confidence = np.max(prediction, axis=-1)[0]
 
-#         # Determine class label using list indexing
-#         if 0 <= predicted_class_index < len(class_labels):
-#             predicted_class = class_labels[predicted_class_index]
-#         else:
-#             predicted_class = 'unknown'
+        # Determine class label using list indexing
+        if 0 <= predicted_class_index < len(class_labels):
+            predicted_class = class_labels[predicted_class_index]
+        else:
+            predicted_class = 'unknown'
 
-#         return predicted_class, confidence
+        return predicted_class, confidence
 
-#     except Exception as e:
-#         print(f"Error processing frame: {e}")
-#         return 'unknown', 0.0
+    except Exception as e:
+        print(f"Error processing frame: {e}")
+        return 'unknown', 0.0
 
 
-# @predict_bp.route('/process_frame', methods=['POST'])
-# def process_frame_endpoint():
-#     try:
-#         print("Processing frame...")
-#         data = request.json
-#         if 'frame' not in data:
-#             return jsonify({'error': 'No frame provided'}), 400
+@predict_bp.route('/process_frame', methods=['POST'])
+def process_frame_endpoint():
+    try:
+        print("Processing frame...")
+        data = request.json
+        if 'frame' not in data:
+            return jsonify({'error': 'No frame provided'}), 400
 
-#         # Extract and decode base64 data
-#         print("Decoding frame...")
-#         base64_data = data['frame'].split(",")[1]
-#         print("Base64 data:", base64_data)
-#         frame = np.frombuffer(base64.b64decode(base64_data), np.uint8)
-#         print("Frame decoded successfully.", frame)
-#         frame = cv2.imdecode(frame, cv2.IMREAD_COLOR)
-#         print("Frame:", frame)
-#         predicted_class, confidence = process_frame(frame)
-#         print("Predicted class:", predicted_class)
-#         print("Confidence:", confidence)
+        # Extract and decode base64 data
+        print("Decoding frame...")
+        base64_data = data['frame'].split(",")[1]
+        print("Base64 data:", base64_data)
+        frame = np.frombuffer(base64.b64decode(base64_data), np.uint8)
+        print("Frame decoded successfully.", frame)
+        frame = cv2.imdecode(frame, cv2.IMREAD_COLOR)
+        print("Frame:", frame)
+        predicted_class, confidence = process_frame(frame)
+        print("Predicted class:", predicted_class)
+        print("Confidence:", confidence)
 
-#         return jsonify({'class': predicted_class, 'confidence': float(confidence)}), 200
-#     except Exception as e:
-#         print(f"Error in process_frame_endpoint: {e}")
-#         return jsonify({'error': str(e)}), 500
+        return jsonify({'class': predicted_class, 'confidence': float(confidence)}), 200
+    except Exception as e:
+        print(f"Error in process_frame_endpoint: {e}")
+        return jsonify({'error': str(e)}), 500
 
 '''
 import os
