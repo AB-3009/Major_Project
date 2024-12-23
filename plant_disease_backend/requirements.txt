@@ -12,3 +12,4 @@ gunicorn
 # opencv-python-headless
 # opencv-python
 groq
+python-dotenv
