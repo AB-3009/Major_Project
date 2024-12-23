@@ -19,8 +19,11 @@ import sys
 # print("OpenCV installed successfully!")
 
 import cv2
+import json
+from groq import Groq
+from dotenv import load_dotenv
 
-
+load_dotenv()
 
 
 predict_bp = Blueprint('predict', __name__)
@@ -58,46 +61,68 @@ CONFIDENCE_THRESHOLD = 0.8
 HF_API_URL = "https://api-inference.huggingface.co/models/gpt2"
 HF_HEADERS = {"Authorization": f"Bearer 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"}  # Replace with your token
 
+
+
+
+client = Groq(
+    api_key=os.environ.get("GROQ_API_KEY"),
+)
+
+
+
+
 def fetch_disease_details(disease_name):
-    prompt = f"Provide a brief description, remedies, and next steps for managing the plant disease: {disease_name}."
+    prompt = f"""
+    Provide information about the plant disease: {disease_name}. 
+    Return the response in the following JSON format:
+    {{
+        "description": "Brief description of the disease.",
+        "remedies": ["List of remedies or treatments."],
+        "next_steps": ["List of next steps to manage the disease."]
+    }}
+    """
+
     try:
-        response = requests.post(
-            HF_API_URL,
-            headers=HF_HEADERS,
-            json={"inputs": prompt}
+        # Groq API call
+        chat_completion = client.chat.completions.create(
+            messages=[
+                {
+                    "role": "user",
+                    "content": prompt,
+                }
+            ],
+            model="llama3-8b-8192",
         )
+        
+        # Extract response
+        response_text = chat_completion.choices[0].message.content
 
-        # Check if the response is successful
-        if response.status_code == 200:
-            response_json = response.json()
+        # Log raw response for debugging
+        print("Raw response from Groq:", response_text)
 
-            # Log the raw response for debugging
-            print("Raw response JSON:", response_json)
-
-            # Ensure response is a list with at least one element
-            if isinstance(response_json, list) and len(response_json) > 0:
-                # Ensure the first element has "generated_text" key
-                first_entry = response_json[0]
-                if isinstance(first_entry, dict) and "generated_text" in first_entry:
-                    generated_text = first_entry["generated_text"]
-                    return parse_generated_text(generated_text)
-                else:
-                    print("First entry missing 'generated_text' key or is malformed:", first_entry)
-            else:
-                print("Response JSON is not a valid list or is empty:", response_json)
-
-            return {
-                "description": "No valid AI response received.",
-                "remedies": [],
-                "next_steps": []
-            }
+        # Extract JSON block using regex
+        json_match = re.search(r'\{[\s\S]*\}', response_text)
+        
+        if json_match:
+            json_text = json_match.group(0)
         else:
-            print(f"Error from AI API: {response.status_code}, Response: {response.text}")
-            return {
-                "description": f"Error from AI: {response.status_code}",
-                "remedies": ["Try again later."],
-                "next_steps": ["Check system status."]
-            }
+            print("No JSON block found. Falling back to manual parsing.")
+            return parse_generated_text(response_text)
+
+        # Parse the extracted JSON
+        try:
+            response_json = json.loads(json_text)
+        except json.JSONDecodeError:
+            print("Failed to decode JSON. Falling back to manual parsing.")
+            return parse_generated_text(response_text)
+
+        # Ensure necessary fields exist
+        return {
+            "description": response_json.get("description", "No description available."),
+            "remedies": response_json.get("remedies", ["No remedies provided."]),
+            "next_steps": response_json.get("next_steps", ["No next steps provided."])
+        }
+
     except Exception as e:
         print(f"Error fetching AI-generated details: {e}")
         return {
@@ -120,6 +145,7 @@ def parse_generated_text(text):
         "remedies": remedies or ["No remedies provided."],
         "next_steps": next_steps or ["No next steps provided."]
     }
+
     
 @predict_bp.route('/predict', methods=['POST'])
 @basic_auth_required
@@ -131,6 +157,8 @@ def predict():
     file = request.files['image']
     if file.filename == '':
         return jsonify({"error": "No selected file"}), 400
+    
+    
 
     filename = secure_filename(file.filename)
     # print("Filename: ", filename)
