@@ -14,3 +14,4 @@ opencv-python
 groq
 python-dotenv
 ipython
+pandas
