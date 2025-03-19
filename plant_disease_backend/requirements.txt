@@ -9,8 +9,8 @@ numpy
 pillow
 gunicorn
 # libgl1
-# opencv-python-headless
-# opencv-python
+opencv-python-headless
+opencv-python
 groq
 python-dotenv
 ipython
