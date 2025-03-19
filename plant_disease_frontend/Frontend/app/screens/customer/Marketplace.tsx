@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react'
 import {
     View,
     Text,
-    Button,
     StyleSheet,
     FlatList,
     Alert,
@@ -34,7 +33,7 @@ const Marketplace = () => {
             try {
                 const token = await AsyncStorage.getItem('token')
                 const response = await fetch(
-                    'https://majorproject-production-af32.up.railway.app/marketplace/all',
+                    'https://major-project-dmdw.onrender.com/marketplace/all',
                     {
                         headers: {
                             Authorization: `Bearer ${token}`,
@@ -55,7 +54,7 @@ const Marketplace = () => {
         try {
             const token = await AsyncStorage.getItem('token')
             const response = await fetch(
-                `https://majorproject-production-af32.up.railway.app/marketplace/product/${productId}`,
+                `https://major-project-dmdw.onrender.com/marketplace/product/${productId}`,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -74,7 +73,7 @@ const Marketplace = () => {
         try {
             const token = await AsyncStorage.getItem('token')
             const response = await fetch(
-                `https://majorproject-production-af32.up.railway.app/marketplace/purchase/${selectedProduct?._id}`,
+                `https://major-project-dmdw.onrender.com/marketplace/purchase/${selectedProduct?._id}`,
                 {
                     method: 'POST',
                     headers: {
@@ -100,6 +99,18 @@ const Marketplace = () => {
     return (
         <View style={styles.container}>
             <Text style={styles.title}>Marketplace</Text>
+            {/* <Text
+                style={{
+                    fontSize: 32,
+                    fontWeight: 'bold',
+                    textAlign: 'center',
+                    position: 'absolute',
+                    top: '85%',
+                    left: '30%',
+                }}
+            >
+                Coming Soon...
+            </Text> */}
             <FlatList
                 data={products}
                 keyExtractor={(item) => item._id.toString()}
@@ -116,15 +127,19 @@ const Marketplace = () => {
                             <Image
                                 source={{
                                     uri:
-                                        'https://majorproject-production-af32.up.railway.app/admin/preview/' +
+                                        'https://major-project-dmdw.onrender.com/admin/preview/' +
                                         imageName,
                                 }}
-                                style={{ width: 100, height: 100 }}
+                                style={styles.productImage}
                             />
-                            <Text style={styles.productName}>{item.name}</Text>
-                            <Text style={styles.productPrice}>
-                                {item.price} rs
-                            </Text>
+                            <View style={styles.productDetails}>
+                                <Text style={styles.productName}>
+                                    {item.name}
+                                </Text>
+                                <Text style={styles.productPrice}>
+                                    {item.price} rs
+                                </Text>
+                            </View>
                         </TouchableOpacity>
                     )
                 }}
@@ -142,13 +157,13 @@ const Marketplace = () => {
                         <Image
                             source={{
                                 uri:
-                                    'https://majorproject-production-af32.up.railway.app/admin/preview/' +
+                                    'https://major-project-dmdw.onrender.com/admin/preview/' +
                                     selectedProduct.image.replace(
                                         './product_images/',
                                         '',
                                     ),
                             }}
-                            style={{ width: 100, height: 100 }}
+                            style={styles.modalImage}
                         />
                         <Text style={styles.modalTitle}>
                             {selectedProduct.name}
@@ -157,10 +172,10 @@ const Marketplace = () => {
                             {selectedProduct.description}
                         </Text>
                         <Text style={styles.modalPrice}>
-                            ${selectedProduct.price}
+                            ₹{selectedProduct.price}
                         </Text>
                         <Text style={styles.modalQuantity}>
-                            {selectedProduct.quantity}
+                            Available: {selectedProduct.quantity}
                         </Text>
                         <TextInput
                             placeholder='Quantity'
@@ -169,11 +184,23 @@ const Marketplace = () => {
                             style={styles.input}
                             keyboardType='numeric'
                         />
-                        <Button title='Purchase' onPress={handlePurchase} />
-                        <Button
-                            title='Close'
+                        <Text style={styles.totalPrice}>
+                            Total: ₹{Number(quantity) * selectedProduct.price}
+                        </Text>
+                        <TouchableOpacity
+                            style={styles.purchaseButton}
+                            onPress={handlePurchase}
+                        >
+                            <Text style={styles.purchaseButtonText}>
+                                Purchase
+                            </Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            style={styles.closeButton}
                             onPress={() => setModalVisible(false)}
-                        />
+                        >
+                            <Text style={styles.closeButtonText}>Close</Text>
+                        </TouchableOpacity>
                     </View>
                 </Modal>
             )}
@@ -185,14 +212,17 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding: 16,
-        backgroundColor: '#f5f5f5',
+        // backgroundColor: '#f5f5f5',
     },
     title: {
         fontSize: 24,
         fontWeight: 'bold',
         marginBottom: 16,
+        textAlign: 'center',
+        marginTop: 25,
     },
     product: {
+        flexDirection: 'row',
         padding: 16,
         backgroundColor: '#fff',
         marginBottom: 8,
@@ -202,10 +232,21 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.1,
         shadowRadius: 8,
         elevation: 2,
+        alignItems: 'center',
+    },
+    productImage: {
+        width: 100,
+        height: 100,
+        borderRadius: 8,
+    },
+    productDetails: {
+        marginLeft: 16,
+        flex: 1,
     },
     productName: {
         fontSize: 18,
         fontWeight: 'bold',
+        marginBottom: 4,
     },
     productPrice: {
         fontSize: 16,
@@ -223,6 +264,12 @@ const styles = StyleSheet.create({
         shadowRadius: 4,
         elevation: 5,
     },
+    modalImage: {
+        width: 150,
+        height: 150,
+        borderRadius: 8,
+        marginBottom: 16,
+    },
     modalTitle: {
         fontSize: 24,
         fontWeight: 'bold',
@@ -231,6 +278,7 @@ const styles = StyleSheet.create({
     modalDescription: {
         fontSize: 16,
         marginBottom: 16,
+        textAlign: 'center',
     },
     modalPrice: {
         fontSize: 18,
@@ -248,6 +296,37 @@ const styles = StyleSheet.create({
         marginBottom: 12,
         paddingHorizontal: 8,
         width: '100%',
+        borderRadius: 5,
+    },
+    totalPrice: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        marginBottom: 16,
+    },
+    purchaseButton: {
+        backgroundColor: '#28a745',
+        padding: 12,
+        borderRadius: 5,
+        alignItems: 'center',
+        marginBottom: 16,
+        width: '100%',
+    },
+    purchaseButtonText: {
+        color: 'white',
+        fontSize: 16,
+        fontWeight: 'bold',
+    },
+    closeButton: {
+        backgroundColor: '#dc3545',
+        padding: 12,
+        borderRadius: 5,
+        alignItems: 'center',
+        width: '100%',
+    },
+    closeButtonText: {
+        color: 'white',
+        fontSize: 16,
+        fontWeight: 'bold',
     },
 })
 

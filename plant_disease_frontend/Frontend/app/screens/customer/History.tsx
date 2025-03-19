@@ -20,7 +20,7 @@ const History = () => {
             try {
                 const token = await AsyncStorage.getItem('token')
                 const response = await fetch(
-                    'https://majorproject-production-af32.up.railway.app/history/history',
+                    'https://major-project-dmdw.onrender.com/history/history',
                     {
                         method: 'GET',
                         headers: {
@@ -49,6 +49,18 @@ const History = () => {
     return (
         <View style={styles.container}>
             <Text style={styles.header}>Prediction History</Text>
+            {/* <Text
+                style={{
+                    fontSize: 32,
+                    fontWeight: 'bold',
+                    textAlign: 'center',
+                    position: 'absolute',
+                    top: '85%',
+                    left: '30%',
+                }}
+            >
+                Coming Soon...
+            </Text> */}
             <FlatList
                 data={history}
                 keyExtractor={(item, index) => index.toString()}
@@ -65,7 +77,6 @@ const History = () => {
 
                     return (
                         <View style={styles.historyItem}>
-                            {/* Display Image */}
                             {item.image_path ? (
                                 <Image
                                     source={{
@@ -80,7 +91,7 @@ const History = () => {
                                     No Image Available
                                 </Text>
                             )}
-                            {/* Display Prediction Details */}
+
                             <Text style={styles.predictedDisease}>
                                 Disease: {item.predicted_disease || 'N/A'}
                             </Text>
@@ -113,13 +124,14 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding: 16,
-        backgroundColor: '#f9f9f9',
+        // backgroundColor: '#f5f5f5',
     },
     header: {
-        fontSize: 20,
+        fontSize: 24,
         fontWeight: 'bold',
         marginBottom: 16,
         textAlign: 'center',
+        marginTop: 25,
     },
     historyItem: {
         backgroundColor: '#fff',
@@ -128,13 +140,13 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.2,
+        shadowOpacity: 0.1,
         shadowRadius: 4,
-        elevation: 3,
+        elevation: 2,
     },
     image: {
-        width: 100,
-        height: 150,
+        width: '100%',
+        height: 200,
         marginBottom: 12,
         borderRadius: 8,
     },
@@ -145,27 +157,27 @@ const styles = StyleSheet.create({
         marginBottom: 12,
     },
     predictedDisease: {
-        fontSize: 16,
+        fontSize: 18,
         fontWeight: 'bold',
         marginBottom: 4,
     },
     confidence: {
-        fontSize: 14,
+        fontSize: 16,
         marginBottom: 4,
         color: '#555',
     },
     description: {
-        fontSize: 14,
+        fontSize: 16,
         marginBottom: 4,
         color: '#555',
     },
     remedies: {
-        fontSize: 14,
+        fontSize: 16,
         marginBottom: 4,
         color: '#555',
     },
     nextSteps: {
-        fontSize: 14,
+        fontSize: 16,
         color: '#555',
     },
 })

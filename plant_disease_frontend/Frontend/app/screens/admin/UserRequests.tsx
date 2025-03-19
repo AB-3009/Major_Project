@@ -1,6 +1,13 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import React, { useEffect, useState } from 'react'
-import { View, Text, Button, StyleSheet, FlatList, Alert } from 'react-native'
+import {
+    View,
+    Text,
+    TouchableOpacity,
+    StyleSheet,
+    FlatList,
+    Alert,
+} from 'react-native'
 
 interface Request {
     _id: string
@@ -19,7 +26,7 @@ const UserRequests = () => {
             try {
                 const token = await AsyncStorage.getItem('token')
                 const response = await fetch(
-                    'https://majorproject-production-af32.up.railway.app/auth/pending-users',
+                    'https://major-project-dmdw.onrender.com/auth/pending-users',
                     {
                         headers: {
                             authorization: 'Bearer ' + token,
@@ -47,7 +54,7 @@ const UserRequests = () => {
         try {
             const token = await AsyncStorage.getItem('token')
             const response = await fetch(
-                'https://majorproject-production-af32.up.railway.app/auth/approve-user',
+                'https://major-project-dmdw.onrender.com/auth/approve-user',
                 {
                     method: 'POST',
                     headers: {
@@ -76,35 +83,41 @@ const UserRequests = () => {
 
     return (
         <View style={styles.container}>
-            <Text>User Requests</Text>
+            <Text style={styles.header}>User Requests</Text>
 
             <FlatList
                 data={requests}
                 keyExtractor={(item) => item._id.toString()}
                 renderItem={({ item }) => (
-                    <View style={styles.request}>
-                        <Text>username: {item.username}</Text>
-                        <Text>email: {item.email}</Text>
-                        <Text>role: {item.role}</Text>
-                        <Text>status: {item.status}</Text>
-                        <Button
-                            title='Approve'
-                            onPress={() =>
-                                handleApprove({
-                                    userId: item._id,
-                                    action: 'approve',
-                                })
-                            }
-                        />
-                        <Button
-                            title='Reject'
-                            onPress={() =>
-                                handleApprove({
-                                    userId: item._id,
-                                    action: 'reject',
-                                })
-                            }
-                        />
+                    <View style={styles.requestContainer}>
+                        <Text style={styles.username}>{item.username}</Text>
+                        <Text style={styles.email}>{item.email}</Text>
+                        <Text style={styles.role}>{item.role}</Text>
+                        <Text style={styles.status}>{item.status}</Text>
+                        <View style={styles.buttonContainer}>
+                            <TouchableOpacity
+                                style={[styles.button, styles.approveButton]}
+                                onPress={() =>
+                                    handleApprove({
+                                        userId: item._id,
+                                        action: 'approve',
+                                    })
+                                }
+                            >
+                                <Text style={styles.buttonText}>Approve</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                style={[styles.button, styles.rejectButton]}
+                                onPress={() =>
+                                    handleApprove({
+                                        userId: item._id,
+                                        action: 'reject',
+                                    })
+                                }
+                            >
+                                <Text style={styles.buttonText}>Reject</Text>
+                            </TouchableOpacity>
+                        </View>
                     </View>
                 )}
             />
@@ -116,11 +129,67 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding: 16,
+        // backgroundColor: '#f5f5f5',
     },
-    request: {
+    header: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        marginBottom: 16,
+        textAlign: 'center',
+        marginTop: 25,
+    },
+    requestContainer: {
+        backgroundColor: '#fff',
         padding: 16,
-        borderBottomWidth: 1,
-        borderBottomColor: '#ccc',
+        marginVertical: 8,
+        borderRadius: 8,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+        elevation: 2,
+    },
+    username: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        marginBottom: 4,
+    },
+    email: {
+        fontSize: 16,
+        color: '#666',
+        marginBottom: 4,
+    },
+    role: {
+        fontSize: 16,
+        color: '#666',
+        marginBottom: 4,
+    },
+    status: {
+        fontSize: 16,
+        color: '#666',
+        marginBottom: 12,
+    },
+    buttonContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+    },
+    button: {
+        flex: 1,
+        paddingVertical: 10,
+        paddingHorizontal: 20,
+        borderRadius: 5,
+        alignItems: 'center',
+        marginHorizontal: 5,
+    },
+    approveButton: {
+        backgroundColor: '#28a745',
+    },
+    rejectButton: {
+        backgroundColor: '#dc3545',
+    },
+    buttonText: {
+        color: '#fff',
+        fontSize: 16,
     },
 })
 

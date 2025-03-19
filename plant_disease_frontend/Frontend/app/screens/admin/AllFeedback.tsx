@@ -1,3 +1,4 @@
+import { Collapsible } from '@/components/Collapsible'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import React, { useEffect, useState } from 'react'
 import { View, Text, StyleSheet, FlatList, Alert } from 'react-native'
@@ -17,7 +18,7 @@ const AllFeedback = () => {
             try {
                 const token = await AsyncStorage.getItem('token')
                 const response = await fetch(
-                    'https://majorproject-production-af32.up.railway.app/admin/feedback',
+                    'https://major-project-dmdw.onrender.com/admin/feedback',
                     {
                         headers: {
                             Authorization: `Bearer ${token}`,
@@ -34,18 +35,39 @@ const AllFeedback = () => {
         fetchFeedbacks()
     }, [])
 
+    // Group feedbacks by email
+    const groupedFeedbacks = feedbacks.reduce(
+        (acc: { [key: string]: Feedback[] }, feedback) => {
+            if (!acc[feedback.email]) {
+                acc[feedback.email] = []
+            }
+            acc[feedback.email].push(feedback)
+            return acc
+        },
+        {},
+    )
+
     return (
         <View style={styles.container}>
-            <Text>All Feedback</Text>
+            <Text style={styles.header}>All Feedback</Text>
             <FlatList
-                data={feedbacks}
-                keyExtractor={(item) => item.email}
-                renderItem={({ item }) => (
-                    <View style={styles.feedback}>
-                        <Text>{item.email}</Text>
-                        <Text>{item.feedback}</Text>
-                        <Text>{item.createdAt}</Text>
-                    </View>
+                data={Object.keys(groupedFeedbacks)}
+                keyExtractor={(email) => email}
+                renderItem={({ item: email }) => (
+                    <Collapsible title={email}>
+                        {groupedFeedbacks[email].map((feedback, index) => (
+                            <View key={index} style={styles.feedbackContainer}>
+                                <Text style={styles.feedbackText}>
+                                    {feedback.feedback}
+                                </Text>
+                                <Text style={styles.dateText}>
+                                    {new Date(
+                                        feedback.createdAt,
+                                    ).toLocaleDateString()}
+                                </Text>
+                            </View>
+                        ))}
+                    </Collapsible>
                 )}
             />
         </View>
@@ -56,11 +78,34 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding: 16,
+        // backgroundColor: '#f5f5f5',
     },
-    feedback: {
+    header: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        marginBottom: 16,
+        textAlign: 'center',
+        marginTop: 25,
+    },
+    feedbackContainer: {
+        backgroundColor: '#fff',
         padding: 16,
-        borderBottomWidth: 1,
-        borderBottomColor: '#ccc',
+        marginVertical: 8,
+        borderRadius: 8,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+        elevation: 2,
+    },
+    feedbackText: {
+        fontSize: 16,
+        color: '#333',
+        marginBottom: 8,
+    },
+    dateText: {
+        fontSize: 14,
+        color: '#666',
     },
 })
 

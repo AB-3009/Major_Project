@@ -1,7 +1,14 @@
 import React, { useState } from 'react'
-import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native'
+import {
+    View,
+    Text,
+    TextInput,
+    Button,
+    StyleSheet,
+    Alert,
+    TouchableOpacity,
+} from 'react-native'
 import { Picker } from '@react-native-picker/picker'
-
 import { NavigationProp } from '@react-navigation/native'
 
 interface Props {
@@ -18,7 +25,7 @@ const RegistrationPage: React.FC<Props> = ({ navigation }) => {
         try {
             // Replace with your API call
             const response = await fetch(
-                'https://majorproject-production-af32.up.railway.app/auth/register',
+                'https://major-project-dmdw.onrender.com/auth/register',
                 {
                     method: 'POST',
                     headers: {
@@ -50,18 +57,20 @@ const RegistrationPage: React.FC<Props> = ({ navigation }) => {
 
     return (
         <View style={styles.container}>
-            <Text>Register</Text>
+            <Text style={styles.title}>Register</Text>
             <TextInput
                 placeholder='Username'
                 value={username}
                 onChangeText={setUsername}
                 style={styles.input}
+                placeholderTextColor='#aaa'
             />
             <TextInput
                 placeholder='Email'
                 value={email}
                 onChangeText={setEmail}
                 style={styles.input}
+                placeholderTextColor='#aaa'
             />
             <TextInput
                 placeholder='Password'
@@ -69,22 +78,30 @@ const RegistrationPage: React.FC<Props> = ({ navigation }) => {
                 onChangeText={setPassword}
                 secureTextEntry
                 style={styles.input}
+                placeholderTextColor='#aaa'
             />
-            <Picker
-                selectedValue={role}
-                onValueChange={setRole}
-                style={styles.input}
-            >
-                <Picker.Item label='Admin' value='admin' />
-                <Picker.Item label='Specialist' value='specialist' />
-                <Picker.Item label='Seller' value='seller' />
-                <Picker.Item label='Customer' value='customer' />
-            </Picker>
-            <Button title='Register' onPress={handleRegister} />
-            <Button
-                title='Login'
+            <View style={styles.pickerWrapper}>
+                <Picker
+                    selectedValue={role}
+                    onValueChange={(itemValue) => setRole(itemValue)}
+                    style={styles.picker}
+                >
+                    <Picker.Item label='Admin' value='admin' />
+                    <Picker.Item label='Specialist' value='specialist' />
+                    <Picker.Item label='Seller' value='seller' />
+                    <Picker.Item label='Customer' value='customer' />
+                </Picker>
+            </View>
+
+            <TouchableOpacity style={styles.button} onPress={handleRegister}>
+                <Text style={styles.buttonText}>Register</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+                style={styles.link}
                 onPress={() => navigation.navigate('Login')}
-            />
+            >
+                <Text style={styles.linkText}>Login</Text>
+            </TouchableOpacity>
         </View>
     )
 }
@@ -94,13 +111,84 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         padding: 16,
+        width: '100%',
+    },
+    title: {
+        fontSize: 32,
+        fontWeight: 'bold',
+        marginBottom: 32,
+        color: '#333',
+        textAlign: 'center',
+        textShadowColor: 'rgba(0, 0, 0, 0.75)',
+        textShadowOffset: { width: -1, height: 1 },
+        textShadowRadius: 10,
+        position: 'absolute',
+        top: '10%',
+        left: '33%',
+        textTransform: 'uppercase',
     },
     input: {
-        height: 40,
-        borderColor: 'gray',
+        height: 50,
+        borderColor: 'rgba(255, 255, 255, 0.5)',
         borderWidth: 1,
-        marginBottom: 12,
-        paddingHorizontal: 8,
+        marginBottom: 16,
+        paddingHorizontal: 16,
+        backgroundColor: 'rgba(255, 255, 255, 0.4)',
+        borderRadius: 25,
+        fontSize: 16,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.2,
+        shadowRadius: 5,
+        elevation: 60,
+        backdropFilter: 'blur(10px)',
+    },
+    picker: {
+        height: 50,
+        marginBottom: 16,
+        backgroundColor: 'rgba(255, 255, 255, 0.5)',
+        borderRadius: 25,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.2,
+        shadowRadius: 5,
+        elevation: 2,
+        color: '#aaa',
+    },
+    pickerWrapper: {
+        borderRadius: 30,
+        overflow: 'hidden',
+        marginBottom: 16,
+    },
+
+    button: {
+        backgroundColor: 'rgba(0, 123, 255, 0.5)',
+        paddingVertical: 15,
+        borderRadius: 25,
+        alignItems: 'center',
+        marginBottom: 16,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.3,
+        shadowRadius: 5,
+        elevation: 60,
+        borderColor: 'rgba(255, 255, 255, 0.5)', // Semi-transparent border
+        borderWidth: 1,
+        backdropFilter: 'blur(10px)', // Blur effect
+        width: '50%',
+        alignSelf: 'center',
+    },
+    buttonText: {
+        color: '#fff',
+        fontSize: 18,
+        fontWeight: 'bold',
+    },
+    link: {
+        alignItems: 'center',
+    },
+    linkText: {
+        color: '#fff',
+        fontSize: 16,
     },
 })
 

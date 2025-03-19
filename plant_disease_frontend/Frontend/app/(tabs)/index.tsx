@@ -1,19 +1,11 @@
-import { ImageBackground, StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 import React from 'react'
-// Import the image using require
-import bg from '@/assets/images/bg1.jpg'
 import AppNavigator from '../navigation/AppNavigator'
 
 const App = () => {
     return (
         <View style={styles.container}>
-            <ImageBackground
-                source={bg}
-                resizeMode='cover'
-                style={styles.image}
-            >
-                <AppNavigator />
-            </ImageBackground>
+            <AppNavigator />
         </View>
     )
 }

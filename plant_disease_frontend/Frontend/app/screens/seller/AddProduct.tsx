@@ -3,7 +3,6 @@ import {
     View,
     Text,
     TextInput,
-    Button,
     StyleSheet,
     Alert,
     Image,
@@ -51,7 +50,7 @@ const AddProduct = ({ navigation }: { navigation: any }) => {
 
                 const imageName = product.image.split('/').pop()
                 setImage(
-                    `https://majorproject-production-af32.up.railway.app/admin/preview/${imageName}`,
+                    `https://major-project-dmdw.onrender.com/admin/preview/${imageName}`,
                 )
             } else {
                 setName('')
@@ -61,7 +60,7 @@ const AddProduct = ({ navigation }: { navigation: any }) => {
                 setImage(null)
                 setNewImage(null)
             }
-        }, [product]),
+        }, [product, route]),
     )
 
     const handleImageUpload = async () => {
@@ -94,8 +93,8 @@ const AddProduct = ({ navigation }: { navigation: any }) => {
 
     const handleSaveProduct = async () => {
         const url = product
-            ? `https://majorproject-production-af32.up.railway.app/marketplace/update/${product._id}`
-            : 'https://majorproject-production-af32.up.railway.app/marketplace/add'
+            ? `https://major-project-dmdw.onrender.com/marketplace/update/${product._id}`
+            : 'https://major-project-dmdw.onrender.com/marketplace/add'
 
         const method = product ? 'PUT' : 'POST'
 
@@ -115,6 +114,7 @@ const AddProduct = ({ navigation }: { navigation: any }) => {
                 data: newImage.data,
             } as any)
         }
+
         try {
             const token = await AsyncStorage.getItem('token')
             const response = await fetch(url, {
@@ -130,8 +130,8 @@ const AddProduct = ({ navigation }: { navigation: any }) => {
                     'Success',
                     product ? 'Product updated' : 'Product added',
                 )
-
-                navigation.navigate('All Products')
+                handleResetFields()
+                // navigation.navigate('All Products')
             } else {
                 Alert.alert('Error', 'Failed to save product')
             }
@@ -140,11 +140,24 @@ const AddProduct = ({ navigation }: { navigation: any }) => {
         }
     }
 
+    const handleResetFields = () => {
+        setName('')
+        setDescription('')
+        setPrice('')
+        setQuantity('')
+        setImage(null)
+        setNewImage(null)
+        navigation.setParams({ product: null })
+
+        navigation.navigate('All Products')
+    }
+
     return (
         <View style={styles.container}>
             <Text style={styles.header}>
                 {product ? 'Update Product' : 'Add Product'}
             </Text>
+
             <TextInput
                 placeholder='Name'
                 value={name}
@@ -172,16 +185,10 @@ const AddProduct = ({ navigation }: { navigation: any }) => {
                 style={styles.input}
             />
             {image && !newImage && (
-                <Image
-                    source={{ uri: image }}
-                    style={{ width: 150, height: 150, marginBottom: 16 }}
-                />
+                <Image source={{ uri: image }} style={styles.image} />
             )}
             {newImage && (
-                <Image
-                    source={{ uri: newImage.uri }}
-                    style={{ width: 150, height: 150, marginBottom: 16 }}
-                />
+                <Image source={{ uri: newImage.uri }} style={styles.image} />
             )}
             <TouchableOpacity
                 onPress={handleImageUpload}
@@ -191,10 +198,22 @@ const AddProduct = ({ navigation }: { navigation: any }) => {
                     {newImage || image ? 'Change Image' : 'Upload Image'}
                 </Text>
             </TouchableOpacity>
-            <Button
-                title={product ? 'Update Product' : 'Add Product'}
+            <TouchableOpacity
                 onPress={handleSaveProduct}
-            />
+                style={styles.saveButton}
+            >
+                <Text style={styles.saveButtonText}>
+                    {product ? 'Update Product' : 'Add Product'}
+                </Text>
+            </TouchableOpacity>
+            {product && (
+                <TouchableOpacity
+                    onPress={handleResetFields}
+                    style={styles.backButton}
+                >
+                    <Text style={styles.backButtonText}>Back</Text>
+                </TouchableOpacity>
+            )}
         </View>
     )
 }
@@ -203,11 +222,14 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding: 16,
+        // backgroundColor: '#f5f5f5',
     },
     header: {
-        fontSize: 18,
+        fontSize: 24,
         fontWeight: 'bold',
         marginBottom: 16,
+        textAlign: 'center',
+        marginTop: 25,
     },
     input: {
         height: 40,
@@ -215,16 +237,48 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         marginBottom: 12,
         paddingHorizontal: 8,
+        borderRadius: 5,
+        backgroundColor: '#fff',
+    },
+    image: {
+        width: 150,
+        height: 150,
+        marginBottom: 16,
+        borderRadius: 8,
     },
     uploadButton: {
-        backgroundColor: '#4CAF50',
+        backgroundColor: '#007BFF',
         padding: 10,
         borderRadius: 5,
         marginBottom: 16,
+        alignItems: 'center',
     },
     uploadText: {
         color: 'white',
         textAlign: 'center',
+        fontWeight: 'bold',
+    },
+    saveButton: {
+        backgroundColor: '#28a745',
+        padding: 12,
+        borderRadius: 5,
+        alignItems: 'center',
+        marginBottom: 16,
+    },
+    saveButtonText: {
+        color: 'white',
+        fontSize: 16,
+        fontWeight: 'bold',
+    },
+    backButton: {
+        backgroundColor: '#dc3545',
+        padding: 12,
+        borderRadius: 5,
+        alignItems: 'center',
+    },
+    backButtonText: {
+        color: 'white',
+        fontSize: 16,
         fontWeight: 'bold',
     },
 })

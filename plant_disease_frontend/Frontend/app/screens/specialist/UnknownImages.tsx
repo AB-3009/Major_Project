@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import {
     View,
     Text,
-    Button,
+    TouchableOpacity,
     StyleSheet,
     FlatList,
     Alert,
@@ -19,6 +19,7 @@ const UnknownImages = () => {
     const [diseaseOptions, setDiseaseOptions] = useState<
         Array<{ label: string; value: string }>
     >([])
+    const [classificationResult, setClassificationResult] = useState<any>(null)
 
     const diseases = [
         'Apple___Apple_scab',
@@ -67,7 +68,7 @@ const UnknownImages = () => {
             try {
                 const token = await AsyncStorage.getItem('token')
                 const response = await fetch(
-                    'https://majorproject-production-af32.up.railway.app/specialist/unknown_images',
+                    'https://major-project-dmdw.onrender.com/specialist/unknown_images',
                     {
                         headers: {
                             Authorization: `Bearer ${token}`,
@@ -100,7 +101,7 @@ const UnknownImages = () => {
         try {
             const token = await AsyncStorage.getItem('token')
             const response = await fetch(
-                'https://majorproject-production-af32.up.railway.app/specialist/label_images',
+                'https://major-project-dmdw.onrender.com/specialist/label_images',
                 {
                     method: 'POST',
                     headers: {
@@ -126,29 +127,69 @@ const UnknownImages = () => {
         }
     }
 
+    const handleAskAI = async (image: string) => {
+        try {
+            const token = await AsyncStorage.getItem('token')
+            const formData = new FormData()
+            console.log('image: ', image)
+            console.log('image.split: ', image.split('/').pop())
+            const demoUri = 'https://major-project-dmdw.onrender.com' + image
+            console.log('demoUri: ', demoUri)
+            formData.append('image', {
+                uri: 'https://major-project-dmdw.onrender.com' + image,
+                name: image.split('/').pop(),
+                type: 'image/jpeg',
+            } as any)
+            console.log('formData: ', formData)
+
+            const response = await fetch(
+                'https://major-project-dmdw.onrender.com/specialist/classify_disease',
+                {
+                    method: 'POST',
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                    body: formData,
+                },
+            )
+            console.log('response: ', response)
+            const data = await response.json()
+            console.log('data: ', data)
+            if (response.ok) {
+                setClassificationResult(data)
+                Alert.alert('AI Classification Result', JSON.stringify(data))
+            } else {
+                Alert.alert('Error', data.error || 'Classification failed')
+            }
+        } catch (error) {
+            Alert.alert('Error', 'Something went wrong')
+        }
+    }
+
     return (
         <View style={styles.container}>
-            <Text>Unknown Images</Text>
+            <Text style={styles.header}>Unknown Images</Text>
             <FlatList
                 data={images}
                 keyExtractor={(item) => item}
                 renderItem={({ item }) => (
-                    <View style={styles.image}>
+                    <View style={styles.imageContainer}>
                         <Image
                             source={{
                                 uri:
-                                    'https://majorproject-production-af32.up.railway.app' +
+                                    'https://major-project-dmdw.onrender.com' +
                                     item,
                             }}
-                            style={{ width: 100, height: 100 }}
+                            style={styles.image}
                         />
-                        <Text>{item}</Text>
-                        <Button
-                            title={
+                        <Text style={styles.imageText}>{item}</Text>
+                        <TouchableOpacity
+                            style={[
+                                styles.button,
                                 selectedImages.includes(item)
-                                    ? 'Deselect'
-                                    : 'Select'
-                            }
+                                    ? styles.deselectButton
+                                    : styles.selectButton,
+                            ]}
                             onPress={() => {
                                 setSelectedImages((prev) =>
                                     prev.includes(item)
@@ -156,7 +197,19 @@ const UnknownImages = () => {
                                         : [...prev, item],
                                 )
                             }}
-                        />
+                        >
+                            <Text style={styles.buttonText}>
+                                {selectedImages.includes(item)
+                                    ? 'Deselect'
+                                    : 'Select'}
+                            </Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            style={styles.askAIButton}
+                            onPress={() => handleAskAI(item)}
+                        >
+                            <Text style={styles.buttonText}>Ask AI</Text>
+                        </TouchableOpacity>
                     </View>
                 )}
             />
@@ -171,7 +224,9 @@ const UnknownImages = () => {
                 style={styles.dropdown}
                 dropDownContainerStyle={styles.dropdownContainer}
             />
-            <Button title='Label' onPress={handleLabel} />
+            <TouchableOpacity style={styles.labelButton} onPress={handleLabel}>
+                <Text style={styles.labelButtonText}>Label</Text>
+            </TouchableOpacity>
         </View>
     )
 }
@@ -180,11 +235,63 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding: 16,
+        // backgroundColor: '#f5f5f5',
+    },
+    header: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        marginBottom: 16,
+        textAlign: 'center',
+        marginTop: 25,
+    },
+    imageContainer: {
+        backgroundColor: '#fff',
+        padding: 16,
+        marginVertical: 8,
+        borderRadius: 8,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+        elevation: 2,
+        alignItems: 'center',
     },
     image: {
-        padding: 16,
-        borderBottomWidth: 1,
-        borderBottomColor: '#ccc',
+        width: 100,
+        height: 100,
+        borderRadius: 8,
+    },
+    imageText: {
+        fontSize: 14,
+        color: '#333',
+        marginVertical: 8,
+    },
+    button: {
+        paddingVertical: 10,
+        paddingHorizontal: 20,
+        borderRadius: 5,
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginVertical: 5,
+    },
+    selectButton: {
+        backgroundColor: '#007BFF',
+    },
+    deselectButton: {
+        backgroundColor: '#dc3545',
+    },
+    buttonText: {
+        color: '#fff',
+        fontSize: 16,
+    },
+    askAIButton: {
+        backgroundColor: '#28a745',
+        paddingVertical: 10,
+        paddingHorizontal: 20,
+        borderRadius: 5,
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginVertical: 5,
     },
     dropdown: {
         marginVertical: 12,
@@ -193,6 +300,21 @@ const styles = StyleSheet.create({
     },
     dropdownContainer: {
         borderColor: 'gray',
+    },
+    labelButton: {
+        backgroundColor: '#28a745',
+        paddingVertical: 12,
+        paddingHorizontal: 32,
+        borderRadius: 5,
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginTop: 8,
+        marginBottom: 40,
+    },
+    labelButtonText: {
+        color: '#fff',
+        fontSize: 16,
+        fontWeight: 'bold',
     },
 })
 

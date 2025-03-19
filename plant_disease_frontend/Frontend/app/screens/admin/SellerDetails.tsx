@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import {
     View,
     Text,
-    Button,
+    TouchableOpacity,
     StyleSheet,
     FlatList,
     Alert,
@@ -35,7 +35,7 @@ const SellerDetails = () => {
         try {
             const token = await AsyncStorage.getItem('token')
             const response = await fetch(
-                `https://majorproject-production-af32.up.railway.app/admin/delete_product/${productId}`,
+                `https://major-project-dmdw.onrender.com/admin/delete_product/${productId}`,
                 {
                     method: 'DELETE',
                     headers: {
@@ -61,7 +61,7 @@ const SellerDetails = () => {
 
     return (
         <View style={styles.container}>
-            <Text>Products for {seller.username}</Text>
+            <Text style={styles.header}>Products for {seller.username}</Text>
             <FlatList
                 data={products}
                 keyExtractor={(item) => item.product_id}
@@ -69,26 +69,42 @@ const SellerDetails = () => {
                     // Extract the image name
                     const imageName = item.image.split('/').pop()
                     return (
-                        <View style={styles.product}>
+                        <View style={styles.productContainer}>
                             <Image
                                 source={{
                                     uri:
-                                        'https://majorproject-production-af32.up.railway.app/admin/preview/' +
+                                        'https://major-project-dmdw.onrender.com/admin/preview/' +
                                         imageName,
                                 }}
-                                style={{ width: 100, height: 100 }}
+                                style={styles.productImage}
                             />
-                            <Text>{item.name}</Text>
-                            <Text>Image Name: {imageName}</Text>
-                            <Text>Price: {item.price}</Text>
-                            <Text>Description: {item.description}</Text>
-                            <Text>Quantity: {item.quantity}</Text>
-                            <Button
-                                title='Delete Product'
-                                onPress={() =>
-                                    handleDeleteProduct(item.product_id)
-                                }
-                            />
+                            <View style={styles.productDetails}>
+                                <Text style={styles.productName}>
+                                    {item.name}
+                                </Text>
+                                {/* <Text style={styles.productText}>
+                                    Image Name: {imageName}
+                                </Text> */}
+                                <Text style={styles.productText}>
+                                    Price: {item.price}
+                                </Text>
+                                <Text style={styles.productText}>
+                                    Description: {item.description}
+                                </Text>
+                                <Text style={styles.productText}>
+                                    Quantity: {item.quantity}
+                                </Text>
+                                <TouchableOpacity
+                                    style={styles.deleteButton}
+                                    onPress={() =>
+                                        handleDeleteProduct(item.product_id)
+                                    }
+                                >
+                                    <Text style={styles.buttonText}>
+                                        Delete Product
+                                    </Text>
+                                </TouchableOpacity>
+                            </View>
                         </View>
                     )
                 }}
@@ -101,11 +117,57 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding: 16,
+        // backgroundColor: '#f5f5f5',
     },
-    product: {
+    header: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        marginBottom: 16,
+        textAlign: 'center',
+        marginTop: 25,
+    },
+    productContainer: {
+        flexDirection: 'row',
+        backgroundColor: '#fff',
         padding: 16,
-        borderBottomWidth: 1,
-        borderBottomColor: '#ccc',
+        marginVertical: 8,
+        borderRadius: 8,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+        elevation: 2,
+    },
+    productImage: {
+        width: 100,
+        height: 100,
+        borderRadius: 8,
+    },
+    productDetails: {
+        flex: 1,
+        marginLeft: 16,
+    },
+    productName: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        marginBottom: 4,
+    },
+    productText: {
+        fontSize: 16,
+        color: '#666',
+        marginBottom: 4,
+    },
+    deleteButton: {
+        marginTop: 8,
+        paddingVertical: 10,
+        paddingHorizontal: 20,
+        backgroundColor: '#dc3545',
+        borderRadius: 5,
+        alignItems: 'center',
+    },
+    buttonText: {
+        color: '#fff',
+        fontSize: 16,
     },
 })
 

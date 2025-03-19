@@ -1,6 +1,13 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import React, { useEffect, useState } from 'react'
-import { View, Text, Button, StyleSheet, FlatList, Alert } from 'react-native'
+import {
+    View,
+    Text,
+    TouchableOpacity,
+    StyleSheet,
+    FlatList,
+    Alert,
+} from 'react-native'
 
 interface Specialist {
     email: string
@@ -18,7 +25,7 @@ const AllSpecialists = () => {
             try {
                 const token = await AsyncStorage.getItem('token')
                 const response = await fetch(
-                    'https://majorproject-production-af32.up.railway.app/admin/specialists',
+                    'https://major-project-dmdw.onrender.com/admin/specialists',
                     {
                         headers: {
                             Authorization: `Bearer ${token}`,
@@ -40,7 +47,7 @@ const AllSpecialists = () => {
         try {
             const token = await AsyncStorage.getItem('token')
             const response = await fetch(
-                `https://majorproject-production-af32.up.railway.app/admin/assign_labeling_task/${specialistEmail}`,
+                `https://major-project-dmdw.onrender.com/admin/assign_labeling_task/${specialistEmail}`,
                 {
                     method: 'POST',
                     headers: {
@@ -63,25 +70,49 @@ const AllSpecialists = () => {
 
     return (
         <View style={styles.container}>
-            <Text>All Specialists</Text>
+            <Text style={styles.header}>All Specialists</Text>
             <FlatList
                 data={specialists}
                 keyExtractor={(item) => item.email}
                 renderItem={({ item }) => (
-                    <View style={styles.specialist}>
-                        <Text>{item.username}</Text>
-                        <Text>{item.email}</Text>
-                        <Text>{item.status}</Text>
-                        <Text>
-                            {taskAssigned
-                                ? 'Task assigned'
-                                : 'No task assigned'}
-                        </Text>
-                        <Button
-                            title='Assign Task'
-                            disabled={taskAssigned}
-                            onPress={() => handleAssignTask(item.email)}
-                        />
+                    <View style={styles.specialistContainer}>
+                        <Text style={styles.username}>{item.username}</Text>
+                        <Text style={styles.email}>{item.email}</Text>
+                        <Text style={styles.status}>{item.status}</Text>
+                        {item.status === 'Approved' ? (
+                            <>
+                                <Text
+                                    style={[
+                                        styles.taskStatus,
+                                        taskAssigned
+                                            ? { color: '#28a745' }
+                                            : { color: '#dc3545' },
+                                    ]}
+                                >
+                                    {taskAssigned
+                                        ? 'Task assigned'
+                                        : 'No task assigned'}
+                                </Text>
+                                <TouchableOpacity
+                                    style={[
+                                        styles.button,
+                                        taskAssigned
+                                            ? styles.disabledButton
+                                            : styles.assignButton,
+                                    ]}
+                                    disabled={taskAssigned}
+                                    onPress={() => handleAssignTask(item.email)}
+                                >
+                                    <Text style={styles.buttonText}>
+                                        Assign Task
+                                    </Text>
+                                </TouchableOpacity>
+                            </>
+                        ) : (
+                            <Text style={styles.taskStatus}>
+                                User not Approved yet to assign task.
+                            </Text>
+                        )}
                     </View>
                 )}
             />
@@ -93,11 +124,60 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding: 16,
+        // backgroundColor: '#f5f5f5',
     },
-    specialist: {
+    header: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        marginBottom: 16,
+        textAlign: 'center',
+        marginTop: 25,
+    },
+    specialistContainer: {
+        backgroundColor: '#fff',
         padding: 16,
-        borderBottomWidth: 1,
-        borderBottomColor: '#ccc',
+        marginVertical: 8,
+        borderRadius: 8,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+        elevation: 2,
+    },
+    username: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        marginBottom: 4,
+    },
+    email: {
+        fontSize: 16,
+        color: '#666',
+        marginBottom: 4,
+    },
+    status: {
+        fontSize: 16,
+        color: '#666',
+        marginBottom: 4,
+    },
+    taskStatus: {
+        fontSize: 16,
+        marginBottom: 12,
+    },
+    button: {
+        paddingVertical: 10,
+        paddingHorizontal: 20,
+        borderRadius: 5,
+        alignItems: 'center',
+    },
+    assignButton: {
+        backgroundColor: '#007BFF',
+    },
+    disabledButton: {
+        backgroundColor: '#ccc',
+    },
+    buttonText: {
+        color: '#fff',
+        fontSize: 16,
     },
 })
 

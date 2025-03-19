@@ -9,6 +9,7 @@ import SellerNavigator from './SellerNavigator'
 import CustomerNavigator from './CustomerNavigator'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { ActivityIndicator, View } from 'react-native'
+import ScreenWrapper from '../../components/ScreenWrapper'
 
 const Stack = createStackNavigator()
 
@@ -72,12 +73,48 @@ const AppNavigator = () => {
     return (
         // <NavigationContainer>
         <Stack.Navigator initialRouteName={initialRoute}>
-            <Stack.Screen name='Login' component={LoginPage} />
-            <Stack.Screen name='Register' component={RegistrationPage} />
-            <Stack.Screen name='Admin' component={AdminNavigator} />
-            <Stack.Screen name='Specialist' component={SpecialistNavigator} />
-            <Stack.Screen name='Seller' component={SellerNavigator} />
-            <Stack.Screen name='Customer' component={CustomerNavigator} />
+            <Stack.Screen name='Login' options={{ headerShown: false }}>
+                {(props) => (
+                    <ScreenWrapper>
+                        <LoginPage {...props} />
+                    </ScreenWrapper>
+                )}
+            </Stack.Screen>
+            <Stack.Screen name='Register' options={{ headerShown: false }}>
+                {(props) => (
+                    <ScreenWrapper>
+                        <RegistrationPage {...props} />
+                    </ScreenWrapper>
+                )}
+            </Stack.Screen>
+            <Stack.Screen
+                name='Admin'
+                component={AdminNavigator}
+                options={{
+                    headerShown: false,
+                }}
+            />
+            <Stack.Screen
+                name='Specialist'
+                component={SpecialistNavigator}
+                options={{
+                    headerShown: false,
+                }}
+            />
+            <Stack.Screen
+                name='Seller'
+                component={SellerNavigator}
+                options={{
+                    headerShown: false,
+                }}
+            />
+            <Stack.Screen
+                name='Customer'
+                component={CustomerNavigator}
+                options={{
+                    headerShown: false,
+                }}
+            />
         </Stack.Navigator>
         // </NavigationContainer>
     )

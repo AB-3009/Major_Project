@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import {
     View,
     Text,
-    Button,
+    TouchableOpacity,
     StyleSheet,
     FlatList,
     Alert,
@@ -29,7 +29,7 @@ const AllProducts = ({ navigation }: { navigation: any }) => {
         try {
             const token = await AsyncStorage.getItem('token')
             const response = await fetch(
-                'https://majorproject-production-af32.up.railway.app/marketplace/my-products',
+                'https://major-project-dmdw.onrender.com/marketplace/my-products',
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -54,7 +54,7 @@ const AllProducts = ({ navigation }: { navigation: any }) => {
         try {
             const token = await AsyncStorage.getItem('token')
             const response = await fetch(
-                `https://majorproject-production-af32.up.railway.app/marketplace/delete/${productId}`,
+                `https://major-project-dmdw.onrender.com/marketplace/delete/${productId}`,
                 {
                     method: 'DELETE',
                     headers: {
@@ -86,32 +86,53 @@ const AllProducts = ({ navigation }: { navigation: any }) => {
                     // Extract the image name
                     const imageName = item.image.split('/').pop()
                     return (
-                        <View style={styles.product}>
+                        <View style={styles.productContainer}>
                             <Image
                                 source={{
                                     uri:
-                                        'https://majorproject-production-af32.up.railway.app/admin/preview/' +
+                                        'https://major-project-dmdw.onrender.com/admin/preview/' +
                                         imageName,
                                 }}
-                                style={{ width: 100, height: 100 }}
+                                style={styles.productImage}
                             />
-                            <Text>{item.name}</Text>
-                            <Text>{item.description}</Text>
-                            <Text>{item.price}</Text>
-                            <Text>{item.quantity}</Text>
-                            <Button
-                                title='Update'
-                                onPress={() =>
-                                    navigation.navigate('Add Product', {
-                                        product: item,
-                                    })
-                                }
-                            />
-                            <Button
-                                title='Delete'
-                                color='red'
-                                onPress={() => handleDeleteProduct(item._id)}
-                            />
+                            <View style={styles.productDetails}>
+                                <Text style={styles.productName}>
+                                    {item.name}
+                                </Text>
+                                <Text style={styles.productDescription}>
+                                    {item.description}
+                                </Text>
+                                <Text style={styles.productPrice}>
+                                    Price: {item.price}
+                                </Text>
+                                <Text style={styles.productQuantity}>
+                                    Quantity: {item.quantity}
+                                </Text>
+                                <View style={styles.buttonContainer}>
+                                    <TouchableOpacity
+                                        style={styles.updateButton}
+                                        onPress={() => {
+                                            navigation.navigate('Add Product', {
+                                                product: item,
+                                            })
+                                        }}
+                                    >
+                                        <Text style={styles.buttonText}>
+                                            Update
+                                        </Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity
+                                        style={styles.deleteButton}
+                                        onPress={() =>
+                                            handleDeleteProduct(item._id)
+                                        }
+                                    >
+                                        <Text style={styles.buttonText}>
+                                            Delete
+                                        </Text>
+                                    </TouchableOpacity>
+                                </View>
+                            </View>
                         </View>
                     )
                 }}
@@ -124,16 +145,80 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding: 16,
+        // backgroundColor: '#f5f5f5',
     },
     header: {
-        fontSize: 18,
+        fontSize: 24,
         fontWeight: 'bold',
         marginBottom: 16,
+        textAlign: 'center',
+        marginTop: 25,
     },
-    product: {
+    productContainer: {
+        flexDirection: 'row',
+        backgroundColor: '#fff',
         padding: 16,
-        borderBottomWidth: 1,
-        borderBottomColor: '#ccc',
+        marginVertical: 8,
+        borderRadius: 8,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+        elevation: 2,
+    },
+    productImage: {
+        width: 100,
+        height: 100,
+        borderRadius: 8,
+    },
+    productDetails: {
+        flex: 1,
+        marginLeft: 16,
+    },
+    productName: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        marginBottom: 4,
+    },
+    productDescription: {
+        fontSize: 16,
+        color: '#666',
+        marginBottom: 4,
+    },
+    productPrice: {
+        fontSize: 16,
+        color: '#333',
+        marginBottom: 4,
+    },
+    productQuantity: {
+        fontSize: 16,
+        color: '#333',
+        marginBottom: 12,
+    },
+    buttonContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+    },
+    updateButton: {
+        backgroundColor: '#007BFF',
+        paddingVertical: 10,
+        paddingHorizontal: 20,
+        borderRadius: 5,
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginRight: 8,
+    },
+    deleteButton: {
+        backgroundColor: '#dc3545',
+        paddingVertical: 10,
+        paddingHorizontal: 20,
+        borderRadius: 5,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    buttonText: {
+        color: '#fff',
+        fontSize: 16,
     },
 })
 
