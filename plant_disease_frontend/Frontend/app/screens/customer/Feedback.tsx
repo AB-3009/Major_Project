@@ -16,7 +16,7 @@ const Feedback = () => {
         try {
             const token = await AsyncStorage.getItem('token')
             const response = await fetch(
-                'https://major-project-dmdw.onrender.com/feedback/submit_feedback',
+                'https://majorproject-production-ab17.up.railway.app/feedback/submit_feedback',
                 {
                     method: 'POST',
                     headers: {

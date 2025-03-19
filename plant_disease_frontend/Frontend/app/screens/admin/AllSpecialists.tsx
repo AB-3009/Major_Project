@@ -25,7 +25,7 @@ const AllSpecialists = () => {
             try {
                 const token = await AsyncStorage.getItem('token')
                 const response = await fetch(
-                    'https://major-project-dmdw.onrender.com/admin/specialists',
+                    'https://majorproject-production-ab17.up.railway.app/admin/specialists',
                     {
                         headers: {
                             Authorization: `Bearer ${token}`,
@@ -47,7 +47,7 @@ const AllSpecialists = () => {
         try {
             const token = await AsyncStorage.getItem('token')
             const response = await fetch(
-                `https://major-project-dmdw.onrender.com/admin/assign_labeling_task/${specialistEmail}`,
+                `https://majorproject-production-ab17.up.railway.app/admin/assign_labeling_task/${specialistEmail}`,
                 {
                     method: 'POST',
                     headers: {

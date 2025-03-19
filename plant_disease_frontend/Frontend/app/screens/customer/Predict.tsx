@@ -81,7 +81,7 @@ const Predict = () => {
 
             const token = await AsyncStorage.getItem('token')
             const response = await fetch(
-                'https://major-project-dmdw.onrender.com/predict/predict',
+                'https://majorproject-production-ab17.up.railway.app/predict/predict',
                 {
                     method: 'POST',
                     headers: {

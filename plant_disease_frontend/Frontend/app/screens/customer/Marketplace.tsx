@@ -33,7 +33,7 @@ const Marketplace = () => {
             try {
                 const token = await AsyncStorage.getItem('token')
                 const response = await fetch(
-                    'https://major-project-dmdw.onrender.com/marketplace/all',
+                    'https://majorproject-production-ab17.up.railway.app/marketplace/all',
                     {
                         headers: {
                             Authorization: `Bearer ${token}`,
@@ -54,7 +54,7 @@ const Marketplace = () => {
         try {
             const token = await AsyncStorage.getItem('token')
             const response = await fetch(
-                `https://major-project-dmdw.onrender.com/marketplace/product/${productId}`,
+                `https://majorproject-production-ab17.up.railway.app/marketplace/product/${productId}`,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -73,7 +73,7 @@ const Marketplace = () => {
         try {
             const token = await AsyncStorage.getItem('token')
             const response = await fetch(
-                `https://major-project-dmdw.onrender.com/marketplace/purchase/${selectedProduct?._id}`,
+                `https://majorproject-production-ab17.up.railway.app/marketplace/purchase/${selectedProduct?._id}`,
                 {
                     method: 'POST',
                     headers: {
@@ -127,7 +127,7 @@ const Marketplace = () => {
                             <Image
                                 source={{
                                     uri:
-                                        'https://major-project-dmdw.onrender.com/admin/preview/' +
+                                        'https://majorproject-production-ab17.up.railway.app/admin/preview/' +
                                         imageName,
                                 }}
                                 style={styles.productImage}
@@ -157,7 +157,7 @@ const Marketplace = () => {
                         <Image
                             source={{
                                 uri:
-                                    'https://major-project-dmdw.onrender.com/admin/preview/' +
+                                    'https://majorproject-production-ab17.up.railway.app/admin/preview/' +
                                     selectedProduct.image.replace(
                                         './product_images/',
                                         '',

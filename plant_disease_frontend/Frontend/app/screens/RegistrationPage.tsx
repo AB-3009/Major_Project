@@ -25,7 +25,7 @@ const RegistrationPage: React.FC<Props> = ({ navigation }) => {
         try {
             // Replace with your API call
             const response = await fetch(
-                'https://major-project-dmdw.onrender.com/auth/register',
+                'https://majorproject-production-ab17.up.railway.app/auth/register',
                 {
                     method: 'POST',
                     headers: {

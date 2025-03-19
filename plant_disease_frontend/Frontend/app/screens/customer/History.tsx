@@ -20,7 +20,7 @@ const History = () => {
             try {
                 const token = await AsyncStorage.getItem('token')
                 const response = await fetch(
-                    'https://major-project-dmdw.onrender.com/history/history',
+                    'https://majorproject-production-ab17.up.railway.app/history/history',
                     {
                         method: 'GET',
                         headers: {
@@ -81,7 +81,7 @@ const History = () => {
                                 <Image
                                     source={{
                                         uri:
-                                            'https://majorproject-production-af32.up.railway.app/predict/preview/' +
+                                            'https://majorproject-production-ab17.up.railway.app/predict/preview/' +
                                             imageName,
                                     }}
                                     style={styles.image}

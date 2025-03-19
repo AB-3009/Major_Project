@@ -29,7 +29,7 @@ const AllProducts = ({ navigation }: { navigation: any }) => {
         try {
             const token = await AsyncStorage.getItem('token')
             const response = await fetch(
-                'https://major-project-dmdw.onrender.com/marketplace/my-products',
+                'https://majorproject-production-ab17.up.railway.app/marketplace/my-products',
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -54,7 +54,7 @@ const AllProducts = ({ navigation }: { navigation: any }) => {
         try {
             const token = await AsyncStorage.getItem('token')
             const response = await fetch(
-                `https://major-project-dmdw.onrender.com/marketplace/delete/${productId}`,
+                `https://majorproject-production-ab17.up.railway.app/marketplace/delete/${productId}`,
                 {
                     method: 'DELETE',
                     headers: {
@@ -90,7 +90,7 @@ const AllProducts = ({ navigation }: { navigation: any }) => {
                             <Image
                                 source={{
                                     uri:
-                                        'https://major-project-dmdw.onrender.com/admin/preview/' +
+                                        'https://majorproject-production-ab17.up.railway.app/admin/preview/' +
                                         imageName,
                                 }}
                                 style={styles.productImage}

@@ -33,7 +33,7 @@ const AllSellers = ({ navigation }: { navigation: any }) => {
             try {
                 const token = await AsyncStorage.getItem('token')
                 const response = await fetch(
-                    'https://major-project-dmdw.onrender.com/admin/sellers',
+                    'https://majorproject-production-ab17.up.railway.app/admin/sellers',
                     {
                         headers: {
                             Authorization: `Bearer ${token}`,
@@ -54,7 +54,7 @@ const AllSellers = ({ navigation }: { navigation: any }) => {
         try {
             const token = await AsyncStorage.getItem('token')
             const response = await fetch(
-                `https://major-project-dmdw.onrender.com/admin/delete_seller/${sellerEmail}`,
+                `https://majorproject-production-ab17.up.railway.app/admin/delete_seller/${sellerEmail}`,
                 {
                     method: 'DELETE',
                     headers: {

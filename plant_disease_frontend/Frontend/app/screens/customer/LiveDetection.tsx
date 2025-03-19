@@ -28,7 +28,7 @@ export default function LiveDetection() {
         // Camera permissions are not granted yet.
         return (
             <View style={styles.container}>
-                <Text
+                {/* <Text
                     style={{
                         fontSize: 32,
                         fontWeight: 'bold',
@@ -39,11 +39,11 @@ export default function LiveDetection() {
                     }}
                 >
                     Coming Soon...
-                </Text>
-                {/* <Text style={styles.message}>
+                </Text> */}
+                <Text style={styles.message}>
                     We need your permission to show the camera
                 </Text>
-                <Button onPress={requestPermission} title='grant permission' /> */}
+                <Button onPress={requestPermission} title='grant permission' />
             </View>
         )
     }

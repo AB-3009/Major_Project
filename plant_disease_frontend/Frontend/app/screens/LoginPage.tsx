@@ -22,7 +22,7 @@ const LoginPage = ({ navigation }: LoginPageProps) => {
     const handleLogin = async () => {
         try {
             const response = await fetch(
-                'https://major-project-dmdw.onrender.com/auth/login',
+                'https://majorproject-production-ab17.up.railway.app/auth/login',
                 {
                     method: 'POST',
                     headers: {
