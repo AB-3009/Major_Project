@@ -14,7 +14,7 @@ import requests
 from database.db import get_db
 import base64
 import subprocess
-import sys
+# import sys
 # subprocess.check_call([sys.executable, "-m", "pip", "install", "opencv-python"])
 # print("OpenCV installed successfully!")
 
