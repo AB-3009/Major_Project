@@ -22,7 +22,7 @@ const LoginPage = ({ navigation }: LoginPageProps) => {
     const handleLogin = async () => {
         try {
             const response = await fetch(
-                'https://majorproject-production-ab17.up.railway.app/auth/login',
+                'https://majorproject-production-af32.up.railway.app/auth/login',
                 {
                     method: 'POST',
                     headers: {
@@ -33,9 +33,15 @@ const LoginPage = ({ navigation }: LoginPageProps) => {
             )
 
             const data = await response.json()
-
+            console.log('Response:', data)
+            console.log('Response status:', response.status)
+            console.log('Response ok:', response.ok)
             if (response.ok) {
                 const { session_token, role, username } = data
+                console.log('Login successful:', data)
+                console.log('Session token:', session_token)
+                console.log('Role:', role)
+                console.log('Username:', username)
                 await AsyncStorage.setItem('token', session_token)
                 await AsyncStorage.setItem('role', role)
                 await AsyncStorage.setItem('username', username)
@@ -57,7 +63,10 @@ const LoginPage = ({ navigation }: LoginPageProps) => {
                         Alert.alert('Error', 'Invalid role')
                 }
             } else {
-                Alert.alert('Error', data.message)
+                Alert.alert(
+                    'Error',
+                    data.message || data.error || 'Login failed',
+                )
             }
         } catch (error) {
             Alert.alert('Error', 'Something went wrong')

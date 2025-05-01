@@ -26,7 +26,7 @@ const UserRequests = () => {
             try {
                 const token = await AsyncStorage.getItem('token')
                 const response = await fetch(
-                    'https://majorproject-production-ab17.up.railway.app/auth/pending-users',
+                    'https://majorproject-production-af32.up.railway.app/auth/pending-users',
                     {
                         headers: {
                             authorization: 'Bearer ' + token,
@@ -54,7 +54,7 @@ const UserRequests = () => {
         try {
             const token = await AsyncStorage.getItem('token')
             const response = await fetch(
-                'https://majorproject-production-ab17.up.railway.app/auth/approve-user',
+                'https://majorproject-production-af32.up.railway.app/auth/approve-user',
                 {
                     method: 'POST',
                     headers: {

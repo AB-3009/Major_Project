@@ -68,7 +68,7 @@ const UnknownImages = () => {
             try {
                 const token = await AsyncStorage.getItem('token')
                 const response = await fetch(
-                    'https://majorproject-production-ab17.up.railway.app/specialist/unknown_images',
+                    'https://majorproject-production-af32.up.railway.app/specialist/unknown_images',
                     {
                         headers: {
                             Authorization: `Bearer ${token}`,
@@ -101,7 +101,7 @@ const UnknownImages = () => {
         try {
             const token = await AsyncStorage.getItem('token')
             const response = await fetch(
-                'https://majorproject-production-ab17.up.railway.app/specialist/label_images',
+                'https://majorproject-production-af32.up.railway.app/specialist/label_images',
                 {
                     method: 'POST',
                     headers: {
@@ -134,11 +134,11 @@ const UnknownImages = () => {
             console.log('image: ', image)
             console.log('image.split: ', image.split('/').pop())
             const demoUri =
-                'https://majorproject-production-ab17.up.railway.app' + image
+                'https://majorproject-production-af32.up.railway.app' + image
             console.log('demoUri: ', demoUri)
             formData.append('image', {
                 uri:
-                    'https://majorproject-production-ab17.up.railway.app' +
+                    'https://majorproject-production-af32.up.railway.app' +
                     image,
                 name: image.split('/').pop(),
                 type: 'image/jpeg',
@@ -146,7 +146,7 @@ const UnknownImages = () => {
             console.log('formData: ', formData)
 
             const response = await fetch(
-                'https://majorproject-production-ab17.up.railway.app/specialist/classify_disease',
+                'https://majorproject-production-af32.up.railway.app/specialist/classify_disease',
                 {
                     method: 'POST',
                     headers: {
@@ -180,7 +180,7 @@ const UnknownImages = () => {
                         <Image
                             source={{
                                 uri:
-                                    'https://majorproject-production-ab17.up.railway.app' +
+                                    'https://majorproject-production-af32.up.railway.app' +
                                     item,
                             }}
                             style={styles.image}
