@@ -18,7 +18,7 @@ import sys
 # subprocess.check_call([sys.executable, "-m", "pip", "install", "opencv-python"])
 # print("OpenCV installed successfully!")
 
-import cv2
+# import cv2
 import json
 from groq import Groq
 from dotenv import load_dotenv
@@ -259,7 +259,7 @@ CONFIDENCE_THRESHOLD = 0.8
 # class_labels = {i: folder_name for i, folder_name in enumerate(sorted(os.listdir(data_dir))) if os.path.isdir(os.path.join(data_dir, folder_name))}
 
 class_labels = ["Apple___Apple_scab","Apple___Black_rot","Apple___Cedar_apple_rust","Apple___healthy","Blueberry___healthy","Cherry_(including_sour)___healthy","Cherry_(including_sour)___Powdery_mildew","Corn_(maize)___Cercospora_leaf_spot Gray_leaf_spot","Corn_(maize)___Common_rust","Corn_(maize)___healthy","Corn_(maize)___Northern_Leaf_Blight","Grape___Black_rot","Grape___Esca_(Black_Measles)","Grape___healthy","Grape___Leaf_blight_(Isariopsis_Leaf_Spot)","Orange___Haunglongbing_(Citrus_greening)","Peach___Bacterial_spot","Peach___healthy","Pepper_bell___Bacterial_spot","Pepper_bell___healthy","Potato___Early_blight","Potato___healthy","Potato___Late_blight","Raspberry___healthy","Soybean___healthy","Squash___Powdery_mildew","Strawberry___healthy","Strawberry___Leaf_scorch","Tomato___Bacterial_spot","Tomato___Early_blight","Tomato___healthy","Tomato___Late_blight","Tomato___Leaf_Mold","Tomato___Septoria_leaf_spot","Tomato___Spider_mites Two-spotted_spider_mite","Tomato___Target_Spot","Tomato___Tomato_mosaic_virus","Tomato___Tomato_Yellow_Leaf_Curl_Virus"]
-
+'''
 def preprocess_image(img):
     # Resize and normalize image to match training preprocessing
     if img is None or img.size == 0:
@@ -323,7 +323,7 @@ def process_frame_endpoint():
     except Exception as e:
         print(f"Error in process_frame_endpoint: {e}")
         return jsonify({'error': str(e)}), 500
-
+'''
 '''
 import os
 import shutil
