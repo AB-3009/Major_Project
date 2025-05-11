@@ -50,7 +50,7 @@ const AddProduct = ({ navigation }: { navigation: any }) => {
 
                 const imageName = product.image.split('/').pop()
                 setImage(
-                    `https://major-project-dmdw.onrender.com/admin/preview/${imageName}`,
+                    `https://majorproject-production-af32.up.railway.app/admin/preview/${imageName}`,
                 )
             } else {
                 setName('')
@@ -93,8 +93,8 @@ const AddProduct = ({ navigation }: { navigation: any }) => {
 
     const handleSaveProduct = async () => {
         const url = product
-            ? `https://major-project-dmdw.onrender.com/marketplace/update/${product._id}`
-            : 'https://major-project-dmdw.onrender.com/marketplace/add'
+            ? `https://majorproject-production-af32.up.railway.app/marketplace/update/${product._id}`
+            : 'https://majorproject-production-af32.up.railway.app/marketplace/add'
 
         const method = product ? 'PUT' : 'POST'
 

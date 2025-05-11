@@ -35,7 +35,7 @@ const SellerDetails = () => {
         try {
             const token = await AsyncStorage.getItem('token')
             const response = await fetch(
-                `https://major-project-dmdw.onrender.com/admin/delete_product/${productId}`,
+                `https://majorproject-production-af32.up.railway.app/admin/delete_product/${productId}`,
                 {
                     method: 'DELETE',
                     headers: {
@@ -73,7 +73,7 @@ const SellerDetails = () => {
                             <Image
                                 source={{
                                     uri:
-                                        'https://major-project-dmdw.onrender.com/admin/preview/' +
+                                        'https://majorproject-production-af32.up.railway.app/admin/preview/' +
                                         imageName,
                                 }}
                                 style={styles.productImage}

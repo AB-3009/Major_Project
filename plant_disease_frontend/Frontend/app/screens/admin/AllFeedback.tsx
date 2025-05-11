@@ -18,7 +18,7 @@ const AllFeedback = () => {
             try {
                 const token = await AsyncStorage.getItem('token')
                 const response = await fetch(
-                    'https://major-project-dmdw.onrender.com/admin/feedback',
+                    'https://majorproject-production-af32.up.railway.app/admin/feedback',
                     {
                         headers: {
                             Authorization: `Bearer ${token}`,

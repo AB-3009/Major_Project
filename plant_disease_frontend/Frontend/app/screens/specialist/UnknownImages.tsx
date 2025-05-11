@@ -68,7 +68,7 @@ const UnknownImages = () => {
             try {
                 const token = await AsyncStorage.getItem('token')
                 const response = await fetch(
-                    'https://major-project-dmdw.onrender.com/specialist/unknown_images',
+                    'https://majorproject-production-af32.up.railway.app/specialist/unknown_images',
                     {
                         headers: {
                             Authorization: `Bearer ${token}`,
@@ -101,7 +101,7 @@ const UnknownImages = () => {
         try {
             const token = await AsyncStorage.getItem('token')
             const response = await fetch(
-                'https://major-project-dmdw.onrender.com/specialist/label_images',
+                'https://majorproject-production-af32.up.railway.app/specialist/label_images',
                 {
                     method: 'POST',
                     headers: {
@@ -133,17 +133,20 @@ const UnknownImages = () => {
             const formData = new FormData()
             console.log('image: ', image)
             console.log('image.split: ', image.split('/').pop())
-            const demoUri = 'https://major-project-dmdw.onrender.com' + image
+            const demoUri =
+                'https://majorproject-production-af32.up.railway.app' + image
             console.log('demoUri: ', demoUri)
             formData.append('image', {
-                uri: 'https://major-project-dmdw.onrender.com' + image,
+                uri:
+                    'https://majorproject-production-af32.up.railway.app' +
+                    image,
                 name: image.split('/').pop(),
                 type: 'image/jpeg',
             } as any)
             console.log('formData: ', formData)
 
             const response = await fetch(
-                'https://major-project-dmdw.onrender.com/specialist/classify_disease',
+                'https://majorproject-production-af32.up.railway.app/specialist/classify_disease',
                 {
                     method: 'POST',
                     headers: {
@@ -177,7 +180,7 @@ const UnknownImages = () => {
                         <Image
                             source={{
                                 uri:
-                                    'https://major-project-dmdw.onrender.com' +
+                                    'https://majorproject-production-af32.up.railway.app' +
                                     item,
                             }}
                             style={styles.image}

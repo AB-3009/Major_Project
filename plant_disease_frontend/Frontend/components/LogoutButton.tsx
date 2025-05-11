@@ -8,7 +8,7 @@ const LogoutButton = ({ navigation }: { navigation: NavigationProp<any> }) => {
         try {
             const token = await AsyncStorage.getItem('token')
             const response = await fetch(
-                'https://major-project-dmdw.onrender.com/auth/logout',
+                'https://majorproject-production-af32.up.railway.app/auth/logout',
                 {
                     method: 'POST',
                     headers: {

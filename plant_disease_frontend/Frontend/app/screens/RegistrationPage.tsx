@@ -25,7 +25,7 @@ const RegistrationPage: React.FC<Props> = ({ navigation }) => {
         try {
             // Replace with your API call
             const response = await fetch(
-                'https://major-project-dmdw.onrender.com/auth/register',
+                'https://majorproject-production-af32.up.railway.app/auth/register',
                 {
                     method: 'POST',
                     headers: {
@@ -36,6 +36,9 @@ const RegistrationPage: React.FC<Props> = ({ navigation }) => {
             )
 
             const data = await response.json()
+            console.log('Response:', data)
+            console.log('Response status:', response.status)
+            console.log('Response ok:', response.ok)
 
             if (response.ok) {
                 if (role === 'customer') {
@@ -48,7 +51,10 @@ const RegistrationPage: React.FC<Props> = ({ navigation }) => {
                 }
                 navigation.navigate('Login')
             } else {
-                Alert.alert('Error', data.message)
+                Alert.alert(
+                    'Error',
+                    data.message || data.error || 'registration failed',
+                )
             }
         } catch (error) {
             Alert.alert('Error', 'Something went wrong')
